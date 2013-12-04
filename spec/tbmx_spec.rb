@@ -53,6 +53,19 @@ Line 2</p>
 <p>Line 3
 Line 4</p>"
 
+TWO_LINE_BOLD_BEFORE =
+"Line 1
+\\b{Line 2
+Line 3}
+Line 4"
+
+TWO_LINE_BOLD_AFTER =
+"<p>Line 1
+<b>Line 2
+Line 3</b>
+Line 4</p>"
+
+
 describe TBMX::HTML do
   it "can be instantiated" do
     TBMX::HTML.new("").should be_a TBMX::HTML
@@ -79,6 +92,55 @@ describe TBMX::HTML do
 
     it "can correctly split paragraphs" do
       TBMX::HTML.new(TWO_PARAGRAPHS_BEFORE).parse.should == TWO_PARAGRAPHS_AFTER
+    end
+
+    it "can correctly handle bold" do
+      TBMX::HTML.new("Soli \\b{Deo} Gloria").parse.should ==
+        "<p>Soli <b>Deo</b> Gloria</p>"
+    end
+
+    it "can correctly handle italics" do
+      TBMX::HTML.new("Soli \\i{Deo} Gloria").parse.should ==
+        "<p>Soli <i>Deo</i> Gloria</p>"
+    end
+
+    it "can correctly handle subscripts" do
+      TBMX::HTML.new("Soli \\sub{Deo} Gloria").parse.should ==
+        "<p>Soli <sub>Deo</sub> Gloria</p>"
+    end
+
+    it "can correctly handle superscripts" do
+      TBMX::HTML.new("Soli \\sup{Deo} Gloria").parse.should ==
+        "<p>Soli <sup>Deo</sup> Gloria</p>"
+    end
+
+    it "can correctly handle a command around the entire input" do
+      TBMX::HTML.new("\\b{Soli Deo Gloria}").parse.should ==
+        "<p><b>Soli Deo Gloria</b></p>"
+    end
+
+    it "can correctly handle two commands in a row" do
+      TBMX::HTML.new("Soli \\b{Deo} \\i{Gloria}").parse.should ==
+        "<p>Soli <b>Deo</b> <i>Gloria</i></p>"
+    end
+
+    it "can correctly handle nested commands" do
+      TBMX::HTML.new("Soli \\b{\\i{Deo}} Gloria").parse.should ==
+        "<p>Soli <b><i>Deo</i></b> Gloria</p>"
+    end
+
+    it "can correctly handle three-deep nested commands" do
+      TBMX::HTML.new("Soli \\sup{\\b{\\i{Deo}}} Gloria").parse.should ==
+        "<p>Soli <sup><b><i>Deo</i></b></sup> Gloria</p>"
+    end
+
+    it "can correctly handle an escaped backslash" do
+      TBMX::HTML.new("Left \\\\ Right").parse.should ==
+        "<p>Left \\ Right</p>"
+    end
+
+    it "can correctly handle commands split over multiple lines" do
+      TBMX::HTML.new(TWO_LINE_BOLD_BEFORE).parse.should == TWO_LINE_BOLD_AFTER
     end
   end
 end

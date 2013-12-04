@@ -36,6 +36,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 require 'active_support/all'
+
 include ERB::Util
 
 module TBMX
@@ -49,9 +50,84 @@ module TBMX
       @paragraphs = @lines.split ""
     end
 
+    def evaluate_command(command, input)
+      case command
+      when "\\"
+        "\\ #{input}"
+      when "b"
+        "<b>#{input}</b>"
+      when "i"
+        "<i>#{input}</i>"
+      when "sub"
+        "<sub>#{input}</sub>"
+      when "sup"
+        "<sup>#{input}</sup>"
+      else
+        "<b>[UNKNOWN COMMAND #{command}]</b>"
+      end
+    end
+
+    def parse_command(command, rest)
+      if rest == nil or rest == ""
+        return [evaluate_command(command, rest),
+                ""]
+      elsif rest[0] =~ /\s/
+        return [evaluate_command(command, ""),
+                rest[1 .. -1]]
+      elsif rest[0] == "{"
+        if backslash = rest.index("\\")
+          if (closing_brace = rest.index("}")) < backslash
+            return [evaluate_command(command, rest[1 ... closing_brace]),
+                                              rest[      closing_brace+1 .. -1]]
+          elsif closing_brace
+            interior = parse_command_body(backslash, rest)
+            if new_closing_brace = interior.index("}")
+              return [evaluate_command(command,
+                                       interior[1 ... new_closing_brace]),
+                                       interior[      new_closing_brace+1 .. -1]]
+            else # Assume an implied closing brace.
+              return [evaluate_command(command, interior[1 .. -1]),
+                      ""]
+            end
+          else
+            return evaluate_command(command, parse_command_body(backslash, rest))
+          end
+        elsif closing_brace = rest.index("}")
+          return [evaluate_command(command, rest[1 ... closing_brace]),
+                                            rest[      closing_brace+1 .. -1]]
+        else # Assume an implied closing brace.
+          return [evaluate_command(command, rest[1 .. -1]),
+                  ""]
+        end
+      else
+        raise RuntimeError, "Unreachable: probably a bug in parse_command_name."
+      end
+    end
+
+    def parse_command_name(input)
+      if end_command = input.index(/[\{\s]/)
+        return [input[0 ... end_command],
+                input[      end_command .. -1]]
+      else
+        return [input, ""]
+      end
+    end
+
+    def parse_command_body(backslash, input)
+      before = input[0 ... backslash]
+      command, rest = parse_command_name input[backslash+1 .. -1]
+      middle, back = parse_command(command, rest)
+      return before + middle + parse_paragraph_body(back)
+    end
+
     def parse_paragraph_body(body)
-      raise ArgumentError if not body.is_a? String
-      body
+      return "" if body.nil? or body == ""
+      raise ArgumentError, "Body is #{body.class}" if not body.is_a? String
+      if backslash = body.index("\\")
+        return parse_command_body backslash, body
+      else
+        return body
+      end
     end
 
     def parse_paragraph(paragraph)
