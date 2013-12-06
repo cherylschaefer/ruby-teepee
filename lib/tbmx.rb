@@ -40,6 +40,156 @@ require 'active_support/all'
 include ERB::Util
 
 module TBMX
+  class Token
+    class << self
+      # The child classes should implement this method.  If there is an
+      # immediate match, they should return a newly-created instance of
+      # themselves and the rest of the input as a string.  If there is no match,
+      # they should return nil.
+      def parse? text
+        raise NotImplementedError,
+              "Child class #{self.class} should implement this."
+      end
+    end
+  end
+
+  class SingleCharacterToken < Token
+    class << self
+      def character_matched
+        self::CHARACTER_MATCHED
+      end
+
+      def parse? text
+        if text[0] == character_matched
+          return [self.new, text[1..-1]]
+        else
+          return nil
+        end
+      end
+    end
+  end
+
+  class BackslashToken < SingleCharacterToken
+    CHARACTER_MATCHED = "\\"
+  end
+
+  class LeftBraceToken < SingleCharacterToken
+    CHARACTER_MATCHED = "{"
+  end
+
+  class RightBraceToken < SingleCharacterToken
+    CHARACTER_MATCHED = "}"
+  end
+
+  class EmptyNewlinesToken < Token
+    attr_reader :newlines
+
+    def initialize(newlines)
+      raise ArgumentError if not newlines.is_a? String
+      raise ArgumentError if not newlines =~ /\A\n\n+\z/
+      @newlines = newlines
+    end
+
+    class << self
+      def parse? text
+        if text =~ /\A\n\n+/
+          count = text.index /[^\n]/
+          if count.nil?
+            return [EmptyNewlinesToken.new(text),
+                    ""]
+          else
+            return [EmptyNewlinesToken.new(text[0 ... count]),
+                    text[count .. -1]]
+          end
+        else
+          return nil
+        end
+      end
+    end
+  end
+
+  class WhitespaceToken < Token
+    attr_reader :whitespace
+
+    def initialize(whitespace)
+      raise ArgumentError if not whitespace.is_a? String
+      raise ArgumentError if not whitespace =~ /\A\s+\z/
+      @whitespace = whitespace
+    end
+
+    class << self
+      def parse? text
+        if text =~ /\A\s+/
+          count = text.index /\S/
+          if count.nil?
+            return [WhitespaceToken.new(text),
+                    ""]
+          else
+            return [WhitespaceToken.new(text[0 ... count]),
+                    text[count .. -1]]
+          end
+        else
+          return nil
+        end
+      end
+    end
+  end
+
+  class WordToken < Token
+    attr_reader :word
+
+    def initialize(word)
+      raise ArgumentError, "#{word.class} is not a String" if not word.is_a? String
+      raise ArgumentError, "not a word" if not word =~ /\A[^\s{}\\]+\z/
+      @word = word
+    end
+
+    class << self
+      def parse? text
+        if text =~ /[^\s{}\\]+/
+          count = text.index /[\s{}\\]/
+          if count.nil?
+            return [WordToken.new(text),
+                    ""]
+          else
+            return [WordToken.new(text[0 ... count]),
+                    text[count .. -1]]
+          end
+        else
+          return nil
+        end
+      end
+    end
+  end
+
+  class Tokenizer
+    attr_reader :text, :tokens
+    def initialize(text)
+      @text = text
+      tokenize
+    end
+
+    def tokenize
+      @tokens = []
+      rest = text
+      while rest.length > 0
+        if result = BackslashToken.parse?(rest) or
+           result = LeftBraceToken.parse?(rest) or
+           result = RightBraceToken.parse?(rest) or
+           result = EmptyNewlinesToken.parse?(rest) or
+           result = WhitespaceToken.parse?(rest) or
+           result = WordToken.parse?(rest)
+        then
+          @tokens << result[0]
+          rest = result[1]
+        else
+          raise RuntimeError, "couldn't parse remaining."
+        end
+      end
+      return @tokens
+    end
+  end
+
   class HTML
     attr_reader :text, :lines, :paragraphs
 
@@ -58,12 +208,16 @@ module TBMX
         "<b>#{input}</b>"
       when "i"
         "<i>#{input}</i>"
+      when "lbrace"
+        "{"
+      when "rbrace"
+        "}"
       when "sub"
         "<sub>#{input}</sub>"
       when "sup"
         "<sup>#{input}</sup>"
       else
-        "<b>[UNKNOWN COMMAND #{command}]</b>"
+        "<b>[UNKNOWN COMMAND --- '#{command}']</b>"
       end
     end
 
