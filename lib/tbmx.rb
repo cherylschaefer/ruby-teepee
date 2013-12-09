@@ -69,6 +69,42 @@ module TBMX
     end
   end
 
+  class StringToken < Token
+    attr_reader :text
+    def initialize(text)
+      raise ArgumentError if not text.is_a? String
+      raise ArgumentError if not text =~ self.class.full_match_regex
+      @text = text
+    end
+
+    class << self
+      def full_match_regex
+        self::FULL_MATCH_REGEX # Define this in a child class.
+      end
+
+      def front_match_regex
+        self::FRONT_MATCH_REGEX # Define this in a child class.
+      end
+
+      def count_regex
+        self::COUNT_REGEX # Define this in a child class.
+      end
+
+      def parse? text
+        if text =~ front_match_regex
+          count = text.index count_regex
+          if count.nil?
+            return [self.new(text), ""]
+          else
+            return [self.new(text[0 ... count]), text[count .. -1]]
+          end
+        else
+          return nil
+        end
+      end
+    end
+  end
+
   class BackslashToken < SingleCharacterToken
     CHARACTER_MATCHED = "\\"
   end
@@ -81,84 +117,34 @@ module TBMX
     CHARACTER_MATCHED = "}"
   end
 
-  class EmptyNewlinesToken < Token
-    attr_reader :newlines
 
-    def initialize(newlines)
-      raise ArgumentError if not newlines.is_a? String
-      raise ArgumentError if not newlines =~ /\A\n\n+\z/
-      @newlines = newlines
-    end
+  class EmptyNewlinesToken < StringToken
+    FULL_MATCH_REGEX = /\A\n\n+\z/
+    FRONT_MATCH_REGEX = /\A\n\n+/
+    COUNT_REGEX = /[^\n]/
 
-    class << self
-      def parse? text
-        if text =~ /\A\n\n+/
-          count = text.index /[^\n]/
-          if count.nil?
-            return [EmptyNewlinesToken.new(text),
-                    ""]
-          else
-            return [EmptyNewlinesToken.new(text[0 ... count]),
-                    text[count .. -1]]
-          end
-        else
-          return nil
-        end
-      end
+    def newlines
+      text
     end
   end
 
-  class WhitespaceToken < Token
-    attr_reader :whitespace
+  class WhitespaceToken < StringToken
+    FULL_MATCH_REGEX = /\A\s+\z/
+    FRONT_MATCH_REGEX = /\A\s+/
+    COUNT_REGEX = /\S/
 
-    def initialize(whitespace)
-      raise ArgumentError if not whitespace.is_a? String
-      raise ArgumentError if not whitespace =~ /\A\s+\z/
-      @whitespace = whitespace
-    end
-
-    class << self
-      def parse? text
-        if text =~ /\A\s+/
-          count = text.index /\S/
-          if count.nil?
-            return [WhitespaceToken.new(text),
-                    ""]
-          else
-            return [WhitespaceToken.new(text[0 ... count]),
-                    text[count .. -1]]
-          end
-        else
-          return nil
-        end
-      end
+    def whitespace
+      text
     end
   end
 
-  class WordToken < Token
-    attr_reader :word
+  class WordToken < StringToken
+    FULL_MATCH_REGEX = /\A[^\s{}\\]+\z/
+    FRONT_MATCH_REGEX = /[^\s{}\\]+/
+    COUNT_REGEX = /[\s{}\\]/
 
-    def initialize(word)
-      raise ArgumentError, "#{word.class} is not a String" if not word.is_a? String
-      raise ArgumentError, "not a word" if not word =~ /\A[^\s{}\\]+\z/
-      @word = word
-    end
-
-    class << self
-      def parse? text
-        if text =~ /[^\s{}\\]+/
-          count = text.index /[\s{}\\]/
-          if count.nil?
-            return [WordToken.new(text),
-                    ""]
-          else
-            return [WordToken.new(text[0 ... count]),
-                    text[count .. -1]]
-          end
-        else
-          return nil
-        end
-      end
+    def word
+      text
     end
   end
 
@@ -173,11 +159,11 @@ module TBMX
       @tokens = []
       rest = text
       while rest.length > 0
-        if result = BackslashToken.parse?(rest) or
-           result = LeftBraceToken.parse?(rest) or
-           result = RightBraceToken.parse?(rest) or
+        if result = BackslashToken.parse?(rest)     or
+           result = LeftBraceToken.parse?(rest)     or
+           result = RightBraceToken.parse?(rest)    or
            result = EmptyNewlinesToken.parse?(rest) or
-           result = WhitespaceToken.parse?(rest) or
+           result = WhitespaceToken.parse?(rest)    or
            result = WordToken.parse?(rest)
         then
           @tokens << result[0]
