@@ -46,7 +46,7 @@ module TBMX
       # immediate match, they should return a newly-created instance of
       # themselves and the rest of the input as a string.  If there is no match,
       # they should return nil.
-      def parse? text
+      def matches? text
         raise NotImplementedError,
               "Child class #{self.class} should implement this."
       end
@@ -59,7 +59,7 @@ module TBMX
         self::CHARACTER_MATCHED
       end
 
-      def parse? text
+      def matches? text
         if text[0] == character_matched
           return [self.new, text[1..-1]]
         else
@@ -90,7 +90,7 @@ module TBMX
         self::COUNT_REGEX # Define this in a child class.
       end
 
-      def parse? text
+      def matches? text
         if text =~ front_match_regex
           count = text.index count_regex
           if count.nil?
@@ -159,20 +159,33 @@ module TBMX
       @tokens = []
       rest = text
       while rest.length > 0
-        if result = BackslashToken.parse?(rest)     or
-           result = LeftBraceToken.parse?(rest)     or
-           result = RightBraceToken.parse?(rest)    or
-           result = EmptyNewlinesToken.parse?(rest) or
-           result = WhitespaceToken.parse?(rest)    or
-           result = WordToken.parse?(rest)
+        if result =     BackslashToken.matches?(rest) or # Single Character Tokens
+           result =     LeftBraceToken.matches?(rest) or
+           result =    RightBraceToken.matches?(rest) or
+           result = EmptyNewlinesToken.matches?(rest) or # String Tokens
+           result =    WhitespaceToken.matches?(rest) or
+           result =          WordToken.matches?(rest)
         then
           @tokens << result[0]
           rest = result[1]
         else
-          raise RuntimeError, "couldn't parse remaining."
+          raise RuntimeError, "Couldn't tokenize the remaining text."
         end
       end
       return @tokens
+    end
+  end
+
+  class Parser
+    attr_reader :text, :tokenizer
+
+    def tokens
+      tokenizer.tokens
+    end
+
+    def initialize(text)
+      @text = text
+      @tokenizer = Tokenizer.new text
     end
   end
 
