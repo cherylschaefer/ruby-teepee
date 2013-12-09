@@ -180,17 +180,58 @@ module TBMX
     end
   end
 
-  class ParagraphParser
+  class Parser
+  end
+
+  class CommandParser < Parser
+  end
+
+  class ExpressionParser < Parser
+    def initialize(tokens)
+    end
+
+    class << self
+      def parses?(tokens)
+        raise ArgumentError if not tokens.is_a? Array
+        tokens.each {|token| raise ArgumentError if not token.kind_of? Token}
+        if tokens[0..2].map(&:class) == [BackslashToken, WordToken, LeftBraceToken]
+          # TODO
+        elsif tokens[0].is_a? WordToken
+          # TODO
+        elsif tokens[0].is_a? WhitespaceToken
+          # TODO
+        else
+          # TODO
+        end
+      end
+    end
+  end
+
+  class ParagraphParser < Parser
     attr_reader :tokens
 
     def initialize(tokens)
       raise ArgumentError if not tokens.is_a? Array
       tokens.each {|token| raise ArgumentError if not token.kind_of? Token}
       @tokens = tokens
+      parse
+    end
+
+    def parse
+      @expressions = []
+      rest = tokens
+      while rest.length > 0
+        if result = ExpressionParser.parses?(rest)
+          @expressions << result[]0
+          rest = result[1]
+        else
+          raise RuntimeError, "Couldn't parse the remaining text."
+        end
+      end
     end
   end
 
-  class Parser # This is the top-level parser.
+  class TopLevelParser < Parser
     attr_reader :paragraphs, :text, :tokenizer
 
     def tokens
