@@ -54,6 +54,10 @@ module TBMX
   end
 
   class SingleCharacterToken < Token
+    def text
+      self.class.character_matched
+    end
+
     class << self
       def character_matched
         self::CHARACTER_MATCHED
@@ -176,8 +180,18 @@ module TBMX
     end
   end
 
-  class Parser
-    attr_reader :text, :tokenizer
+  class ParagraphParser
+    attr_reader :tokens
+
+    def initialize(tokens)
+      raise ArgumentError if not tokens.is_a? Array
+      tokens.each {|token| raise ArgumentError if not token.kind_of? Token}
+      @tokens = tokens
+    end
+  end
+
+  class Parser # This is the top-level parser.
+    attr_reader :paragraphs, :text, :tokenizer
 
     def tokens
       tokenizer.tokens
@@ -186,6 +200,14 @@ module TBMX
     def initialize(text)
       @text = text
       @tokenizer = Tokenizer.new text
+      parse
+    end
+
+    def parse
+      @paragraphs =
+        tokens
+        .split {|token| token.class == EmptyNewlinesToken}
+        .map {|paragraph| ParagraphParser.new tokens}
     end
   end
 
