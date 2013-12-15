@@ -36,11 +36,18 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 require 'active_support/all'
+require 'monkey-patch'
 
 include ERB::Util
 
 module TBMX
-  class Token
+  class ParseError < RuntimeError
+  end
+
+  class ParserNode
+  end
+
+  class Token < ParserNode
     class << self
       # The child classes should implement this method.  If there is an
       # immediate match, they should return a newly-created instance of
@@ -64,8 +71,8 @@ module TBMX
       end
 
       def matches? text
-        if text[0] == character_matched
-          return [self.new, text[1..-1]]
+        if text.first == character_matched
+          return [self.new, text.rest]
         else
           return nil
         end
@@ -79,6 +86,10 @@ module TBMX
       raise ArgumentError if not text.is_a? String
       raise ArgumentError if not text =~ self.class.full_match_regex
       @text = text
+    end
+
+    def to_html
+      @text
     end
 
     class << self
@@ -140,6 +151,10 @@ module TBMX
     def whitespace
       text
     end
+
+    def to_html
+      " " # Replace all whitespace tokens with a single space.
+    end
   end
 
   class WordToken < StringToken
@@ -180,39 +195,78 @@ module TBMX
     end
   end
 
-  class Parser
-  end
+  class CommandParser < ParserNode
+    attr_reader :command, :expressions
 
-  class CommandParser < Parser
-  end
+    def initialize(command, expressions)
+      raise ArgumentError if not command.is_a? WordToken
+      @command = command
+      raise ArgumentError if not expressions.is_a? Array
+      expressions.each {|expression| raise ArgumentError if not expression.kind_of? ParserNode}
+      @expressions = expressions
+    end
 
-  class ExpressionParser < Parser
-    def initialize(tokens)
+    def to_html
+      case command.word
+      when "lbrace"
+        "{"
+      when "rbrace"
+        "}"
+      when "b"
+        "<b>" + expressions.map(&:to_html).join + "</b>"
+      when "i"
+        "<i>" + expressions.map(&:to_html).join + "</i>"
+      when "u"
+        "<u>" + expressions.map(&:to_html).join + "</u>"
+      when "sub"
+        "<sub>" + expressions.map(&:to_html).join + "</sub>"
+      when "sup"
+        "<sup>" + expressions.map(&:to_html).join + "</sup>"
+      else
+        %{<span style="color: red">[UNKNOWN COMMAND #{command.to_html}]}
+      end
     end
 
     class << self
-      def parses?(tokens)
-        raise ArgumentError if not tokens.is_a? Array
-        tokens.each {|token| raise ArgumentError if not token.kind_of? Token}
-        if tokens[0..2].map(&:class) == [BackslashToken, WordToken, LeftBraceToken]
-          # TODO
-        elsif tokens[0].is_a? WordToken
-          # TODO
-        elsif tokens[0].is_a? WhitespaceToken
-          # TODO
-        else
-          # TODO
+      def parse(tokens)
+        expressions = []
+        rest = tokens
+        backslash, command, left_brace = rest.shift(3)
+        right_brace = nil
+        raise ParseError if not backslash.is_a? BackslashToken
+        raise ParseError if not command.is_a? WordToken
+        if not left_brace.is_a? LeftBraceToken # A command with no interior.
+          rest.unshift left_brace if not left_brace.is_a? WhitespaceToken
+          return [CommandParser.new(command, []), rest]
+        end
+        while rest.length > 0
+          if rest.first.is_a? WordToken
+            expressions << rest.shift
+          elsif rest.first.is_a? WhitespaceToken
+            expressions << rest.shift
+          elsif rest.first.is_a? BackslashToken
+            result, rest = CommandParser.parse(rest)
+            expressions << result
+          elsif rest.first.is_a? RightBraceToken
+            right_brace = rest.shift
+            return [CommandParser.new(command, expressions), rest]
+          else
+            raise ParseError
+          end
+        end
+        if right_brace.nil? # Allow a forgotten final right brace.
+          return [CommandParser.new(command, expressions), rest]
         end
       end
     end
   end
 
-  class ParagraphParser < Parser
-    attr_reader :tokens
+  class ParagraphParser < ParserNode
+    attr_reader :expressions, :tokens
 
     def initialize(tokens)
       raise ArgumentError if not tokens.is_a? Array
-      tokens.each {|token| raise ArgumentError if not token.kind_of? Token}
+      tokens.each {|token| raise ArgumentError if not token.kind_of? ParserNode}
       @tokens = tokens
       parse
     end
@@ -221,18 +275,28 @@ module TBMX
       @expressions = []
       rest = tokens
       while rest.length > 0
-        if result = ExpressionParser.parses?(rest)
-          @expressions << result[]0
-          rest = result[1]
+        if rest.first.is_a? WordToken
+          @expressions << rest.shift
+        elsif rest.first.is_a? WhitespaceToken
+          @expressions << rest.shift
+        elsif rest.first.is_a? BackslashToken
+          command, rest = CommandParser.parse(rest)
+          @expressions << command
+        elsif rest.first.is_a? EmptyNewlinesToken
+          return self
         else
-          raise RuntimeError, "Couldn't parse the remaining text."
+          raise ParseError, "rest.first.class is #{rest.first.class}."
         end
       end
     end
+
+    def to_html
+      "<p>\n" + expressions.map(&:to_html).join + "\n</p>\n"
+    end
   end
 
-  class TopLevelParser < Parser
-    attr_reader :paragraphs, :text, :tokenizer
+  class Parser < ParserNode
+    attr_reader :paragraphs, :split_tokens, :text, :tokenizer
 
     def tokens
       tokenizer.tokens
@@ -245,118 +309,12 @@ module TBMX
     end
 
     def parse
-      @paragraphs =
-        tokens
-        .split {|token| token.class == EmptyNewlinesToken}
-        .map {|paragraph| ParagraphParser.new tokens}
-    end
-  end
-
-  class HTML
-    attr_reader :text, :lines, :paragraphs
-
-    def initialize(text)
-      raise ArgumentError if not text.is_a? String
-      @text = text
-      @lines = text.split("\n").map &:strip
-      @paragraphs = @lines.split ""
+      @split_tokens = tokens.split {|token| token.class == EmptyNewlinesToken}
+      @paragraphs = @split_tokens.map {|split_tokens| ParagraphParser.new split_tokens}
     end
 
-    def evaluate_command(command, input)
-      case command
-      when "\\"
-        "\\ #{input}"
-      when "b"
-        "<b>#{input}</b>"
-      when "i"
-        "<i>#{input}</i>"
-      when "lbrace"
-        "{"
-      when "rbrace"
-        "}"
-      when "sub"
-        "<sub>#{input}</sub>"
-      when "sup"
-        "<sup>#{input}</sup>"
-      else
-        "<b>[UNKNOWN COMMAND --- '#{command}']</b>"
-      end
-    end
-
-    def parse_command(command, rest)
-      if rest == nil or rest == ""
-        return [evaluate_command(command, rest),
-                ""]
-      elsif rest[0] =~ /\s/
-        return [evaluate_command(command, ""),
-                rest[1 .. -1]]
-      elsif rest[0] == "{"
-        if backslash = rest.index("\\")
-          if (closing_brace = rest.index("}")) < backslash
-            return [evaluate_command(command, rest[1 ... closing_brace]),
-                                              rest[      closing_brace+1 .. -1]]
-          elsif closing_brace
-            interior = parse_command_body(backslash, rest)
-            if new_closing_brace = interior.index("}")
-              return [evaluate_command(command,
-                                       interior[1 ... new_closing_brace]),
-                                       interior[      new_closing_brace+1 .. -1]]
-            else # Assume an implied closing brace.
-              return [evaluate_command(command, interior[1 .. -1]),
-                      ""]
-            end
-          else
-            return evaluate_command(command, parse_command_body(backslash, rest))
-          end
-        elsif closing_brace = rest.index("}")
-          return [evaluate_command(command, rest[1 ... closing_brace]),
-                                            rest[      closing_brace+1 .. -1]]
-        else # Assume an implied closing brace.
-          return [evaluate_command(command, rest[1 .. -1]),
-                  ""]
-        end
-      else
-        raise RuntimeError, "Unreachable: probably a bug in parse_command_name."
-      end
-    end
-
-    def parse_command_name(input)
-      if end_command = input.index(/[\{\s]/)
-        return [input[0 ... end_command],
-                input[      end_command .. -1]]
-      else
-        return [input, ""]
-      end
-    end
-
-    def parse_command_body(backslash, input)
-      before = input[0 ... backslash]
-      command, rest = parse_command_name input[backslash+1 .. -1]
-      middle, back = parse_command(command, rest)
-      return before + middle + parse_paragraph_body(back)
-    end
-
-    def parse_paragraph_body(body)
-      return "" if body.nil? or body == ""
-      raise ArgumentError, "Body is #{body.class}" if not body.is_a? String
-      if backslash = body.index("\\")
-        return parse_command_body backslash, body
-      else
-        return body
-      end
-    end
-
-    def parse_paragraph(paragraph)
-      raise ArgumentError if not paragraph.is_a? Array
-      paragraph.each {|line| raise ArgumentError if not line.is_a? String}
-      body = paragraph.map do |line|
-        html_escape line
-      end.join "\n"
-      "<p>#{parse_paragraph_body body}</p>"
-    end
-
-    def parse
-      paragraphs.map {|paragraph| parse_paragraph paragraph}.join "\n\n"
+    def to_html
+      paragraphs.map(&:to_html).join "\n"
     end
   end
 end
