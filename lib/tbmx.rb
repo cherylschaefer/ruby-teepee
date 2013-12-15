@@ -208,6 +208,8 @@ module TBMX
 
     def to_html
       case command.word
+      when "bslash"
+        "\\"
       when "lbrace"
         "{"
       when "rbrace"
