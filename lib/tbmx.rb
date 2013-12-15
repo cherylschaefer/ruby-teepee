@@ -216,9 +216,9 @@ module TBMX
         "}"
       when "br", "newline"
         "\n</br>\n"
-      when "bold", "b"
+      when "bold", "b", "textbf"
         "<b>" + expressions.map(&:to_html).join + "</b>"
-      when "italic", "i"
+      when "italic", "i", "textit"
         "<i>" + expressions.map(&:to_html).join + "</i>"
       when "underline", "u"
         "<u>" + expressions.map(&:to_html).join + "</u>"
@@ -227,7 +227,7 @@ module TBMX
       when "superscript", "sup"
         "<sup>" + expressions.map(&:to_html).join + "</sup>"
       else
-        %{<span style="color: red">[UNKNOWN COMMAND #{command.to_html}]}
+        %{<span style="color: red">[UNKNOWN COMMAND #{command.to_html}]</span>}
       end
     end
 
