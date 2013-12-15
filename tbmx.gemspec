@@ -37,7 +37,7 @@
 
 Gem::Specification.new do |s|
   s.name = 'tbmx'
-  s.version = '0.2.0'
+  s.version = '0.2.1'
   s.date = '2013-12-15'
   s.summary = "TBMX is a markup language based on TeX for ThinkingBicycle.com."
   s.description = "TBMX is a markup language based on TeX for ThinkingBicycle.com."
@@ -46,4 +46,5 @@ Gem::Specification.new do |s|
   s.files = `git ls-files lib/`.split($/)
   s.homepage = 'https://github.com/cgore/ruby-tbmx'
   s.add_runtime_dependency 'activesupport', '~> 4.0'
+  s.add_runtime_dependency 'monkey-patch'
 end
