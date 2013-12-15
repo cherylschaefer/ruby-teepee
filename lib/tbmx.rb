@@ -208,21 +208,23 @@ module TBMX
 
     def to_html
       case command.word
-      when "bslash"
+      when "backslash", "bslash"
         "\\"
-      when "lbrace"
+      when "left-brace", "left_brace", "leftbrace", "lbrace"
         "{"
-      when "rbrace"
+      when "right-brace", "right_brace", "rightbrace", "rbrace"
         "}"
-      when "b"
+      when "br", "newline"
+        "\n</br>\n"
+      when "bold", "b"
         "<b>" + expressions.map(&:to_html).join + "</b>"
-      when "i"
+      when "italic", "i"
         "<i>" + expressions.map(&:to_html).join + "</i>"
-      when "u"
+      when "underline", "u"
         "<u>" + expressions.map(&:to_html).join + "</u>"
-      when "sub"
+      when "subscript", "sub"
         "<sub>" + expressions.map(&:to_html).join + "</sub>"
-      when "sup"
+      when "superscript", "sup"
         "<sup>" + expressions.map(&:to_html).join + "</sup>"
       else
         %{<span style="color: red">[UNKNOWN COMMAND #{command.to_html}]}
@@ -284,10 +286,8 @@ module TBMX
         elsif rest.first.is_a? BackslashToken
           command, rest = CommandParser.parse(rest)
           @expressions << command
-        elsif rest.first.is_a? EmptyNewlinesToken
-          return self
         else
-          raise ParseError, "rest.first.class is #{rest.first.class}."
+          return self
         end
       end
     end
