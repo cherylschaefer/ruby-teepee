@@ -176,7 +176,7 @@ module TBMX
 
     def tokenize
       @tokens = []
-      rest = text
+      rest = text.gsub("\r", "")
       while rest.length > 0
         if result =     BackslashToken.matches?(rest) or # Single Character Tokens
            result =     LeftBraceToken.matches?(rest) or
