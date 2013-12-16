@@ -162,6 +162,10 @@ module TBMX
     FRONT_MATCH_REGEX = /[^\s{}\\]+/
     COUNT_REGEX = /[\s{}\\]/
 
+    def to_html
+      html_escape text
+    end
+
     def word
       text
     end
