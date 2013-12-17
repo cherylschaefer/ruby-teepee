@@ -82,10 +82,15 @@ module TBMX
 
   class StringToken < Token
     attr_reader :text
+
     def initialize(text)
       raise ArgumentError if not text.is_a? String
       raise ArgumentError if not text =~ self.class.full_match_regex
       @text = text
+    end
+
+    def to_s
+      @text
     end
 
     def to_html
@@ -210,6 +215,10 @@ module TBMX
       @expressions = expressions
     end
 
+    def command_error(message)
+      %{<span style="color: red">[#{message}]</span>}
+    end
+
     def to_html
       case command.word
       when "backslash", "bslash"
@@ -230,12 +239,37 @@ module TBMX
         "<sub>" + expressions.map(&:to_html).join + "</sub>"
       when "superscript", "sup"
         "<sup>" + expressions.map(&:to_html).join + "</sup>"
+      when "user"
+        user_command_handler
       else
-        %{<span style="color: red">[UNKNOWN COMMAND #{command.to_html}]</span>}
+        command_error "unknown command #{command.to_html}"
       end
     end
 
+    def user_command_handler
+      user = expressions.select {|expr| expr.is_a? WordToken}.first
+      if not user
+        command_error "NO USER SPECIFIED"
+      else
+        if @@action_view.kind_of? ActionView::Base
+          the_user = User.smart_find user.to_s
+          if the_user
+            @@action_view.render partial: 'users/name_link',
+                                 locals: {the_user: the_user}
+          else
+            command_error "unknown user #{user.to_s}"
+          end
+        else
+          %{<a href="http://thinkingbicycle.com/users/#{user}">#{user.to_s}</a>}
+        end
+      end
+    end
+
+
     class << self
+      @@action_view = nil
+      @@controller = nil
+
       def parse(tokens)
         expressions = []
         rest = tokens
@@ -265,6 +299,14 @@ module TBMX
         if right_brace.nil? # Allow a forgotten final right brace.
           return [CommandParser.new(command, expressions), rest]
         end
+      end
+
+      def action_view=(new)
+        @@action_view = new
+      end
+
+      def controller=(new)
+        @@controller = new
       end
     end
   end
