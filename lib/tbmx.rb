@@ -247,8 +247,10 @@ module TBMX
         html_tag :sub
       when "superscript", "sup"
         html_tag :sup
-      when "user"
+      when "user", "user-id", "user_id"
         user_command_handler
+      when "link-id", "link_id"
+        link_id_command_handler
       else
         command_error "unknown command #{command.to_html}"
       end
@@ -261,7 +263,7 @@ module TBMX
     def user_command_handler
       user = expressions.select {|expr| expr.is_a? WordToken}.first
       if not user
-        command_error "NO USER SPECIFIED"
+        command_error "user: error: no user specified"
       else
         if @@action_view.kind_of? ActionView::Base
           the_user = User.smart_find user.to_s
@@ -277,6 +279,26 @@ module TBMX
       end
     end
 
+    def link_id_command_handler
+      link_id = expressions.select {|expr| expr.is_a? WordToken}.first
+      if not link_id
+        command_error "link_id: error: no link ID specified"
+      elsif not link_id.to_s =~ /\A[0-9]+\z/
+        command_error "link_id: error: invalid link ID specified"
+      else
+        if @@action_view.kind_of? ActionView::Base
+          link = Link.find Integer(link_id.to_s)
+          if link
+            @@action_view.render partial: 'links/inline',
+                                 locals: {link: link}
+          else
+            command_error "unknown link ID #{link_id.to_s}"
+          end
+        else
+          %{<a href="http://thinkingbicycle.com/links/#{link_id.to_s}">Link ##{link_id.to_s}</a>}
+        end
+      end
+    end
 
     class << self
       @@action_view = nil
