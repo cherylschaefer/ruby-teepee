@@ -253,6 +253,8 @@ module TBMX
         link_id_command_handler
       when "tag-id", "tag_id"
         tag_id_command_handler
+      when "bookmark-folder-id", "bookmark_folder_id", "bookmark_folder-id", "bookmark-folder_id"
+        bookmark_folder_id_command_handler
       else
         command_error "unknown command #{command.to_html}"
       end
@@ -318,6 +320,26 @@ module TBMX
           end
         else
           %{<a href="http://thinkingbicycle.com/tags/#{tag_id.to_s}">Tag ##{tag_id.to_s}</a>}
+        end
+      end
+    end
+
+    def bookmark_folder_id_command_handler
+      bookmark_folder_id = expressions.select {|expr| expr.is_a? WordToken}.first
+      if not bookmark_folder_id
+        command_error "bookmark_folder_id: error: no bookmark folder ID specified"
+      elsif not bookmark_folder_id.to_s =~ /\A[0-9]+\z/
+        command_error "bookmark_folder_id: error: invalid bookmark folder ID specified"
+      else
+        if @@action_view.kind_of? ActionView::Base
+          bookmark_folder = BookmarkFolder.find Integer(bookmark_folder_id.to_s)
+          if bookmark_folder
+            %{<a href="/bookmark_folders/#{bookmark_folder.id}">Bookmark Folder ##{bookmark_folder.id}</a>}
+          else
+            command_error "unknown bookmark folder ID #{bookmark_folder_id.to_s}"
+          end
+        else
+          %{<a href="http://thinkingbicycle.com/bookmark_folders/#{bookmark_folder_id.to_s}">Bookmark Folder ##{bookmark_folder_id.to_s}</a>}
         end
       end
     end
