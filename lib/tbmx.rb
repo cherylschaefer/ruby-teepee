@@ -251,6 +251,8 @@ module TBMX
         user_command_handler
       when "link-id", "link_id"
         link_id_command_handler
+      when "tag-id", "tag_id"
+        tag_id_command_handler
       else
         command_error "unknown command #{command.to_html}"
       end
@@ -296,6 +298,26 @@ module TBMX
           end
         else
           %{<a href="http://thinkingbicycle.com/links/#{link_id.to_s}">Link ##{link_id.to_s}</a>}
+        end
+      end
+    end
+
+    def tag_id_command_handler
+      tag_id = expressions.select {|expr| expr.is_a? WordToken}.first
+      if not tag_id
+        command_error "tag_id: error: no tag ID specified"
+      elsif not tag_id.to_s =~ /\A[0-9]+\z/
+        command_error "tag_id: error: invalid tag ID specified"
+      else
+        if @@action_view.kind_of? ActionView::Base
+          tag = Tag.find Integer(tag_id.to_s)
+          if tag
+            "<br/>" + @@action_view.render(partial: 'tags/show',locals: {tag: tag}) + "<br/>"
+          else
+            command_error "unknown tag ID #{tag_id.to_s}"
+          end
+        else
+          %{<a href="http://thinkingbicycle.com/tags/#{tag_id.to_s}">Tag ##{tag_id.to_s}</a>}
         end
       end
     end
