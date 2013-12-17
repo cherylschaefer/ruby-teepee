@@ -230,20 +230,32 @@ module TBMX
       when "br", "newline"
         "\n</br>\n"
       when "bold", "b", "textbf"
-        "<b>" + expressions.map(&:to_html).join + "</b>"
+        html_tag :b
+      when "del", "s", "strike", "strikethrough", "strikeout"
+        html_tag :del
       when "italic", "i", "textit"
-        "<i>" + expressions.map(&:to_html).join + "</i>"
+        html_tag :i
       when "underline", "u"
-        "<u>" + expressions.map(&:to_html).join + "</u>"
+        html_tag :u
+      when "tt", "texttt", "teletype", "typewriter"
+        html_tag :tt
+      when "small"
+        html_tag :small
+      when "big"
+        html_tag :big
       when "subscript", "sub"
-        "<sub>" + expressions.map(&:to_html).join + "</sub>"
+        html_tag :sub
       when "superscript", "sup"
-        "<sup>" + expressions.map(&:to_html).join + "</sup>"
+        html_tag :sup
       when "user"
         user_command_handler
       else
         command_error "unknown command #{command.to_html}"
       end
+    end
+
+    def html_tag(tag)
+      "<#{tag}>" + expressions.map(&:to_html).join + "</#{tag}>"
     end
 
     def user_command_handler
