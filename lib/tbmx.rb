@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # -*- mode: Ruby -*-
 
-# Copyright © 2013, Christopher Mark Gore,
+# Copyright © 2013-2014, Christopher Mark Gore,
 # Soli Deo Gloria,
 # All rights reserved.
 #
@@ -12,16 +12,16 @@
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
 #
-# * Redistributions of source code must retain the above copyright
-#   notice, this list of conditions and the following disclaimer.
+#   * Redistributions of source code must retain the above copyright
+#     notice, this list of conditions and the following disclaimer.
 #
-# * Redistributions in binary form must reproduce the above copyright
-#   notice, this list of conditions and the following disclaimer in the
-#   documentation and/or other materials provided with the distribution.
+#   * Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in the
+#     documentation and/or other materials provided with the distribution.
 #
-# * Neither the name of Christopher Mark Gore nor the names of other
-#   contributors may be used to endorse or promote products derived from
-#   this software without specific prior written permission.
+#   * Neither the name of Christopher Mark Gore nor the names of other
+#     contributors may be used to endorse or promote products derived from
+#     this software without specific prior written permission.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -41,6 +41,8 @@ require 'monkey-patch'
 include ERB::Util
 
 module TBMX
+  TB_COM = "http://thinkingbicycle.com"
+
   class ParseError < RuntimeError
   end
 
@@ -176,6 +178,31 @@ module TBMX
     end
   end
 
+  class NumberToken < Token
+    attr_reader :number, :text
+
+    def initialize(text)
+      raise ArgumentError if not text.is_a? String
+      @text = text
+    end
+
+    def parse
+    end
+
+    def to_s
+      number.to_s
+    end
+
+    def to_html
+      to_s
+    end
+
+    class << self
+      def matches? text
+      end
+    end
+  end
+
   class Tokenizer
     attr_reader :text, :tokens
     def initialize(text)
@@ -192,6 +219,7 @@ module TBMX
            result =    RightBraceToken.matches?(rest) or
            result = EmptyNewlinesToken.matches?(rest) or # String Tokens
            result =    WhitespaceToken.matches?(rest) or
+           result =        NumberToken.matches?(rest) or
            result =          WordToken.matches?(rest)
         then
           @tokens << result[0]
@@ -223,9 +251,11 @@ module TBMX
       case command.word
       when "backslash", "bslash"
         "\\"
-      when "left-brace", "left_brace", "leftbrace", "lbrace"
+      when "left-brace", "left_brace", "leftbrace", "lbrace", "opening-brace", "opening_brace",
+           "openingbrace", "obrace"
         "{"
-      when "right-brace", "right_brace", "rightbrace", "rbrace"
+      when "right-brace", "right_brace", "rightbrace", "rbrace", "closing-brace", "closing_brace",
+           "closingbrace", "cbrace"
         "}"
       when "br", "newline"
         "\n</br>\n"
@@ -251,10 +281,15 @@ module TBMX
         user_command_handler
       when "link-id", "link_id"
         link_id_command_handler
+      when "keyword-id", "keyword_id"
+        keyword_id_command_handler
       when "tag-id", "tag_id"
         tag_id_command_handler
-      when "bookmark-folder-id", "bookmark_folder_id", "bookmark_folder-id", "bookmark-folder_id"
-        bookmark_folder_id_command_handler
+      when "folder-id", "folder_id"
+        folder_id_command_handler
+      when "bookmarks-folder-id", "bookmarks_folder_id", "bookmarks_folder-id", "bookmarks-folder_id",
+           "bookmark-folder-id",  "bookmark_folder_id",  "bookmark_folder-id",  "bookmark-folder_id"
+        bookmarks_folder_id_command_handler
       else
         command_error "unknown command #{command.to_html}"
       end
@@ -262,6 +297,10 @@ module TBMX
 
     def html_tag(tag)
       "<#{tag}>" + expressions.map(&:to_html).join + "</#{tag}>"
+    end
+
+    def tb_href(target, string)
+      %{<a href="#{TB_COM}/#{target}">#{string}</a>}
     end
 
     def user_command_handler
@@ -278,70 +317,50 @@ module TBMX
             command_error "unknown user #{user.to_s}"
           end
         else
-          %{<a href="http://thinkingbicycle.com/users/#{user}">#{user.to_s}</a>}
+          tb_href "users/#{user}", user.to_s
+        end
+      end
+    end
+
+    def id_command_handler(klass,
+                           singular = klass.to_s.camelcase_to_snakecase,
+                           plural = singular.pluralize,
+                           partial = "#{plural}/inline",
+                           view="")
+      id = expressions.select {|expr| expr.is_a? WordToken}.first
+      if not id
+        command_error "#{singular}_id: error: no #{singular} ID specified"
+      elsif not id.to_s =~ /\A[0-9]+\z/
+        command_error "#{singular}_id: error: invalid #{singular} ID specified"
+      else
+        if @@action_view.kind_of? ActionView::Base
+          thing = klass.find Integer(id.to_s)
+          if thing
+            @@action_view.render partial: partial,
+                                 locals: {singular.to_sym => thing}
+          else
+            command_error "unknown #{singular} ID #{id.to_s}"
+          end
+        else
+          tb_href "/#{plural}/#{id.to_s}/#{view}", "#{klass} ##{id.to_s}"
         end
       end
     end
 
     def link_id_command_handler
-      link_id = expressions.select {|expr| expr.is_a? WordToken}.first
-      if not link_id
-        command_error "link_id: error: no link ID specified"
-      elsif not link_id.to_s =~ /\A[0-9]+\z/
-        command_error "link_id: error: invalid link ID specified"
-      else
-        if @@action_view.kind_of? ActionView::Base
-          link = Link.find Integer(link_id.to_s)
-          if link
-            @@action_view.render partial: 'links/inline',
-                                 locals: {link: link}
-          else
-            command_error "unknown link ID #{link_id.to_s}"
-          end
-        else
-          %{<a href="http://thinkingbicycle.com/links/#{link_id.to_s}">Link ##{link_id.to_s}</a>}
-        end
-      end
+      id_command_handler Link
     end
 
     def tag_id_command_handler
-      tag_id = expressions.select {|expr| expr.is_a? WordToken}.first
-      if not tag_id
-        command_error "tag_id: error: no tag ID specified"
-      elsif not tag_id.to_s =~ /\A[0-9]+\z/
-        command_error "tag_id: error: invalid tag ID specified"
-      else
-        if @@action_view.kind_of? ActionView::Base
-          tag = Tag.find Integer(tag_id.to_s)
-          if tag
-            "<br/>" + @@action_view.render(partial: 'tags/show',locals: {tag: tag}) + "<br/>"
-          else
-            command_error "unknown tag ID #{tag_id.to_s}"
-          end
-        else
-          %{<a href="http://thinkingbicycle.com/tags/#{tag_id.to_s}">Tag ##{tag_id.to_s}</a>}
-        end
-      end
+      id_command_handler Tag
     end
 
-    def bookmark_folder_id_command_handler
-      bookmark_folder_id = expressions.select {|expr| expr.is_a? WordToken}.first
-      if not bookmark_folder_id
-        command_error "bookmark_folder_id: error: no bookmark folder ID specified"
-      elsif not bookmark_folder_id.to_s =~ /\A[0-9]+\z/
-        command_error "bookmark_folder_id: error: invalid bookmark folder ID specified"
-      else
-        if @@action_view.kind_of? ActionView::Base
-          bookmark_folder = BookmarkFolder.find Integer(bookmark_folder_id.to_s)
-          if bookmark_folder
-            %{<a href="/bookmark_folders/#{bookmark_folder.id}">Bookmark Folder ##{bookmark_folder.id}</a>}
-          else
-            command_error "unknown bookmark folder ID #{bookmark_folder_id.to_s}"
-          end
-        else
-          %{<a href="http://thinkingbicycle.com/bookmark_folders/#{bookmark_folder_id.to_s}">Bookmark Folder ##{bookmark_folder_id.to_s}</a>}
-        end
-      end
+    def folder_id_command_handler
+      id_command_handler Folder
+    end
+
+    def bookmarks_folder_id_command_handler
+      id_command_handler Folder, "folder", "folders", "folders/bookmarks_inline", "bookmarks"
     end
 
     class << self

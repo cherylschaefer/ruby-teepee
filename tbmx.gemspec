@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # -*- mode: Ruby -*-
 
-# Copyright © 2013, Christopher Mark Gore,
+# Copyright © 2013-2014, Christopher Mark Gore,
 # Soli Deo Gloria,
 # All rights reserved.
 #
@@ -12,16 +12,16 @@
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
 #
-# * Redistributions of source code must retain the above copyright
-#   notice, this list of conditions and the following disclaimer.
+#   * Redistributions of source code must retain the above copyright
+#     notice, this list of conditions and the following disclaimer.
 #
-# * Redistributions in binary form must reproduce the above copyright
-#   notice, this list of conditions and the following disclaimer in the
-#   documentation and/or other materials provided with the distribution.
+#   * Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in the
+#     documentation and/or other materials provided with the distribution.
 #
-# * Neither the name of Christopher Mark Gore nor the names of other
-#   contributors may be used to endorse or promote products derived from
-#   this software without specific prior written permission.
+#   * Neither the name of Christopher Mark Gore nor the names of other
+#     contributors may be used to endorse or promote products derived from
+#     this software without specific prior written permission.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -37,10 +37,10 @@
 
 Gem::Specification.new do |s|
   s.name = 'tbmx'
-  s.version = '0.3.0'
-  s.date = '2013-12-16'
-  s.summary = "TBMX is a markup language based on TeX for ThinkingBicycle.com."
-  s.description = "TBMX is a markup language based on TeX for ThinkingBicycle.com."
+  s.version = '0.4.0'
+  s.date = '2014-02-09'
+  s.summary = "TBMX is a markup language for ThinkingBicycle.com."
+  s.description = "TBMX is a markup language, loosely based on Lisp and TeX, for ThinkingBicycle.com."
   s.authors = ['Christopher Mark Gore']
   s.email = 'cgore@cgore.com'
   s.files = `git ls-files lib/`.split($/)
