@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # -*- mode: Ruby -*-
 
-# Copyright © 2013, Christopher Mark Gore,
+# Copyright © 2013-2014, Christopher Mark Gore,
 # Soli Deo Gloria,
 # All rights reserved.
 #
@@ -68,29 +68,32 @@ Line 1 <b>Line 2 Line 3</b> Line 4
 </p>
 "
 
+def para(string)
+  "<p>\n#{string}\n</p>\n"
+end
 
 describe TBMX::Parser do
   it "can be instantiated" do
     TBMX::Parser.new("").should be_a TBMX::Parser
   end
 
-  describe :parse do
+  describe :to_html do
     it "can correctly parse a single word" do
-      TBMX::Parser.new("Word").to_html.should == "<p>\nWord\n</p>\n"
+      TBMX::Parser.new("Word").to_html.should == para("Word")
     end
 
     it "can correctly parse a single non-english word" do
-      TBMX::Parser.new("Λόγος").to_html.should == "<p>\nΛόγος\n</p>\n"
+      TBMX::Parser.new("Λόγος").to_html.should == para("Λόγος")
     end
 
     it "escapes < and >" do
       TBMX::Parser.new("<b>not bold</b>").to_html.should ==
-        "<p>\n&lt;b&gt;not bold&lt;/b&gt;\n</p>\n"
+        para("&lt;b&gt;not bold&lt;/b&gt;")
     end
 
     it "escapes &" do
       TBMX::Parser.new("not &lt; less-than").to_html.should ==
-        "<p>\nnot &amp;lt; less-than\n</p>\n"
+        para("not &amp;lt; less-than")
     end
 
     it "can correctly split paragraphs" do
@@ -99,46 +102,66 @@ describe TBMX::Parser do
 
     it "can correctly handle bold" do
       TBMX::Parser.new("Soli \\b{Deo} Gloria").to_html.should ==
-        "<p>\nSoli <b>Deo</b> Gloria\n</p>\n"
+        para("Soli <b>Deo</b> Gloria")
     end
 
     it "can correctly handle italics" do
       TBMX::Parser.new("Soli \\i{Deo} Gloria").to_html.should ==
-        "<p>\nSoli <i>Deo</i> Gloria\n</p>\n"
+        para("Soli <i>Deo</i> Gloria")
     end
 
     it "can correctly handle subscripts" do
       TBMX::Parser.new("Soli \\sub{Deo} Gloria").to_html.should ==
-        "<p>\nSoli <sub>Deo</sub> Gloria\n</p>\n"
+        para("Soli <sub>Deo</sub> Gloria")
     end
 
     it "can correctly handle superscripts" do
       TBMX::Parser.new("Soli \\sup{Deo} Gloria").to_html.should ==
-        "<p>\nSoli <sup>Deo</sup> Gloria\n</p>\n"
+        para("Soli <sup>Deo</sup> Gloria")
     end
 
     it "can correctly handle a command around the entire input" do
       TBMX::Parser.new("\\b{Soli Deo Gloria}").to_html.should ==
-        "<p>\n<b>Soli Deo Gloria</b>\n</p>\n"
+        para("<b>Soli Deo Gloria</b>")
     end
 
     it "can correctly handle two commands in a row" do
       TBMX::Parser.new("Soli \\b{Deo} \\i{Gloria}").to_html.should ==
-        "<p>\nSoli <b>Deo</b> <i>Gloria</i>\n</p>\n"
+        para("Soli <b>Deo</b> <i>Gloria</i>")
     end
 
     it "can correctly handle nested commands" do
       TBMX::Parser.new("Soli \\b{\\i{Deo}} Gloria").to_html.should ==
-        "<p>\nSoli <b><i>Deo</i></b> Gloria\n</p>\n"
+        para("Soli <b><i>Deo</i></b> Gloria")
     end
 
     it "can correctly handle three-deep nested commands" do
       TBMX::Parser.new("Soli \\sup{\\b{\\i{Deo}}} Gloria").to_html.should ==
-        "<p>\nSoli <sup><b><i>Deo</i></b></sup> Gloria\n</p>\n"
+        para("Soli <sup><b><i>Deo</i></b></sup> Gloria")
     end
 
     it "can correctly handle commands split over multiple lines" do
       TBMX::Parser.new(TWO_LINE_BOLD_BEFORE).to_html.should == TWO_LINE_BOLD_AFTER
+    end
+
+    it "can correctly handle addition" do
+      TBMX::Parser.new("\\+{1 2 3 4}").to_html.should == para("10.0")
+    end
+
+    it "can correctly handle subtraction" do
+      TBMX::Parser.new("\\-{10 40}").to_html.should == para("-30.0")
+    end
+
+    it "can correctly handle multiplication" do
+      TBMX::Parser.new("\\*{10 -4.7}").to_html.should == para("-47.0")
+    end
+
+    it "can correctly handle division" do
+      TBMX::Parser.new("\\/{10 2}").to_html.should == para("5.0")
+    end
+
+    it "can nest mathematics" do
+      TBMX::Parser.new("\\+{10 \\*{3 5} \\-{\\+{4 5} 2}").to_html.should == para("32.0")
     end
   end
 end

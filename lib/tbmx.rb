@@ -290,6 +290,14 @@ module TBMX
       when "bookmarks-folder-id", "bookmarks_folder_id", "bookmarks_folder-id", "bookmarks-folder_id",
            "bookmark-folder-id",  "bookmark_folder_id",  "bookmark_folder-id",  "bookmark-folder_id"
         bookmarks_folder_id_command_handler
+      when "+"
+        addition
+      when "-"
+        subtraction
+      when "*"
+        multiplication
+      when "/"
+        division
       else
         command_error "unknown command #{command.to_html}"
       end
@@ -301,6 +309,33 @@ module TBMX
 
     def tb_href(target, string)
       %{<a href="#{TB_COM}/#{target}">#{string}</a>}
+    end
+
+    def reducable_math_function_handler(function)
+      expressions
+        .map do |number|
+          begin
+            Float(number.to_html)
+          rescue ArgumentError
+            nil
+          end
+        end.reject(&:nil?).reduce(function)
+    end
+
+    def addition
+      reducable_math_function_handler :+
+    end
+
+    def subtraction
+      reducable_math_function_handler :-
+    end
+
+    def multiplication
+      reducable_math_function_handler :*
+    end
+
+    def division
+      reducable_math_function_handler :/
     end
 
     def user_command_handler
