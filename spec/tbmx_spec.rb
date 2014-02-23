@@ -47,11 +47,14 @@ Line 3
 Line 4"
 
 TWO_PARAGRAPHS_AFTER =
-"<p>Line 1
-Line 2</p>
+  "<p>
+Line 1 Line 2
+</p>
 
-<p>Line 3
-Line 4</p>"
+<p>
+Line 3 Line 4
+</p>
+"
 
 TWO_LINE_BOLD_BEFORE =
 "Line 1
@@ -60,87 +63,82 @@ Line 3}
 Line 4"
 
 TWO_LINE_BOLD_AFTER =
-"<p>Line 1
-<b>Line 2
-Line 3</b>
-Line 4</p>"
+  "<p>
+Line 1 <b>Line 2 Line 3</b> Line 4
+</p>
+"
 
 
-describe TBMX::HTML do
+describe TBMX::Parser do
   it "can be instantiated" do
-    TBMX::HTML.new("").should be_a TBMX::HTML
+    TBMX::Parser.new("").should be_a TBMX::Parser
   end
 
   describe :parse do
     it "can correctly parse a single word" do
-      TBMX::HTML.new("Word").parse.should == "<p>Word</p>"
+      TBMX::Parser.new("Word").to_html.should == "<p>\nWord\n</p>\n"
     end
 
     it "can correctly parse a single non-english word" do
-      TBMX::HTML.new("Λόγος").parse.should == "<p>Λόγος</p>"
+      TBMX::Parser.new("Λόγος").to_html.should == "<p>\nΛόγος\n</p>\n"
     end
 
     it "escapes < and >" do
-      TBMX::HTML.new("<b>not bold</b>").parse.should ==
-        "<p>&lt;b&gt;not bold&lt;/b&gt;</p>"
+      TBMX::Parser.new("<b>not bold</b>").to_html.should ==
+        "<p>\n&lt;b&gt;not bold&lt;/b&gt;\n</p>\n"
     end
 
     it "escapes &" do
-      TBMX::HTML.new("not &lt; less-than").parse.should ==
-        "<p>not &amp;lt; less-than</p>"
+      TBMX::Parser.new("not &lt; less-than").to_html.should ==
+        "<p>\nnot &amp;lt; less-than\n</p>\n"
     end
 
     it "can correctly split paragraphs" do
-      TBMX::HTML.new(TWO_PARAGRAPHS_BEFORE).parse.should == TWO_PARAGRAPHS_AFTER
+      TBMX::Parser.new(TWO_PARAGRAPHS_BEFORE).to_html.should == TWO_PARAGRAPHS_AFTER
     end
 
     it "can correctly handle bold" do
-      TBMX::HTML.new("Soli \\b{Deo} Gloria").parse.should ==
-        "<p>Soli <b>Deo</b> Gloria</p>"
+      TBMX::Parser.new("Soli \\b{Deo} Gloria").to_html.should ==
+        "<p>\nSoli <b>Deo</b> Gloria\n</p>\n"
     end
 
     it "can correctly handle italics" do
-      TBMX::HTML.new("Soli \\i{Deo} Gloria").parse.should ==
-        "<p>Soli <i>Deo</i> Gloria</p>"
+      TBMX::Parser.new("Soli \\i{Deo} Gloria").to_html.should ==
+        "<p>\nSoli <i>Deo</i> Gloria\n</p>\n"
     end
 
     it "can correctly handle subscripts" do
-      TBMX::HTML.new("Soli \\sub{Deo} Gloria").parse.should ==
-        "<p>Soli <sub>Deo</sub> Gloria</p>"
+      TBMX::Parser.new("Soli \\sub{Deo} Gloria").to_html.should ==
+        "<p>\nSoli <sub>Deo</sub> Gloria\n</p>\n"
     end
 
     it "can correctly handle superscripts" do
-      TBMX::HTML.new("Soli \\sup{Deo} Gloria").parse.should ==
-        "<p>Soli <sup>Deo</sup> Gloria</p>"
+      TBMX::Parser.new("Soli \\sup{Deo} Gloria").to_html.should ==
+        "<p>\nSoli <sup>Deo</sup> Gloria\n</p>\n"
     end
 
     it "can correctly handle a command around the entire input" do
-      TBMX::HTML.new("\\b{Soli Deo Gloria}").parse.should ==
-        "<p><b>Soli Deo Gloria</b></p>"
+      TBMX::Parser.new("\\b{Soli Deo Gloria}").to_html.should ==
+        "<p>\n<b>Soli Deo Gloria</b>\n</p>\n"
     end
 
     it "can correctly handle two commands in a row" do
-      TBMX::HTML.new("Soli \\b{Deo} \\i{Gloria}").parse.should ==
-        "<p>Soli <b>Deo</b> <i>Gloria</i></p>"
+      TBMX::Parser.new("Soli \\b{Deo} \\i{Gloria}").to_html.should ==
+        "<p>\nSoli <b>Deo</b> <i>Gloria</i>\n</p>\n"
     end
 
     it "can correctly handle nested commands" do
-      TBMX::HTML.new("Soli \\b{\\i{Deo}} Gloria").parse.should ==
-        "<p>Soli <b><i>Deo</i></b> Gloria</p>"
+      TBMX::Parser.new("Soli \\b{\\i{Deo}} Gloria").to_html.should ==
+        "<p>\nSoli <b><i>Deo</i></b> Gloria\n</p>\n"
     end
 
     it "can correctly handle three-deep nested commands" do
-      TBMX::HTML.new("Soli \\sup{\\b{\\i{Deo}}} Gloria").parse.should ==
-        "<p>Soli <sup><b><i>Deo</i></b></sup> Gloria</p>"
-    end
-
-    it "can correctly handle an escaped backslash" do
-      TBMX::HTML.new("Left \\\\ Right").parse.should ==
-        "<p>Left \\ Right</p>"
+      TBMX::Parser.new("Soli \\sup{\\b{\\i{Deo}}} Gloria").to_html.should ==
+        "<p>\nSoli <sup><b><i>Deo</i></b></sup> Gloria\n</p>\n"
     end
 
     it "can correctly handle commands split over multiple lines" do
-      TBMX::HTML.new(TWO_LINE_BOLD_BEFORE).parse.should == TWO_LINE_BOLD_AFTER
+      TBMX::Parser.new(TWO_LINE_BOLD_BEFORE).to_html.should == TWO_LINE_BOLD_AFTER
     end
   end
 end
