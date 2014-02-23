@@ -163,5 +163,10 @@ describe TBMX::Parser do
     it "can nest mathematics" do
       TBMX::Parser.new("\\+{10 \\*{3 5} \\-{\\+{4 5} 2}").to_html.should == para("32.0")
     end
+
+    it "can calculate some trigonometry" do
+      TBMX::Parser.new("\\sin{0}").to_html.should == para("0.0")
+      TBMX::Parser.new("\\cos{\\pi}").to_html.should == para("-1.0")
+    end
   end
 end

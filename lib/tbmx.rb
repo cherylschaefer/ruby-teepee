@@ -290,14 +290,52 @@ module TBMX
       when "bookmarks-folder-id", "bookmarks_folder_id", "bookmarks_folder-id", "bookmarks-folder_id",
            "bookmark-folder-id",  "bookmark_folder_id",  "bookmark_folder-id",  "bookmark-folder_id"
         bookmarks_folder_id_command_handler
+      when "pi"
+        "#{Math::PI}"
+      when "e"
+        "#{Math::E}"
       when "+"
-        addition
+        reducable_math_function_handler :+
       when "-"
-        subtraction
+        reducable_math_function_handler :-
       when "*"
-        multiplication
+        reducable_math_function_handler :*
       when "/"
-        division
+        reducable_math_function_handler :/
+      when "sin"
+        math_function_handler :sin
+      when "cos"
+        math_function_handler :cos
+      when "tan"
+        math_function_handler :tan
+      when "asin"
+        math_function_handler :asin
+      when "acos"
+        math_function_handler :acos
+      when "atan"
+        math_function_handler :atan
+      when "sinh"
+        math_function_handler :sinh
+      when "cosh"
+        math_function_handler :cosh
+      when "tanh"
+        math_function_handler :tanh
+      when "asinh"
+        math_function_handler :asinh
+      when "acosh"
+        math_function_handler :acosh
+      when "atanh"
+        math_function_handler :atanh
+      when "erfc"
+        math_function_handler :erfc
+      when "gamma"
+        math_function_handler :gamma
+      when "lgamma"
+        math_function_handler :lgamma
+      when "log10"
+        math_function_handler :log10
+      when "log2"
+        math_function_handler :log2
       else
         command_error "unknown command #{command.to_html}"
       end
@@ -311,7 +349,7 @@ module TBMX
       %{<a href="#{TB_COM}/#{target}">#{string}</a>}
     end
 
-    def reducable_math_function_handler(function)
+    def numbers_from_expressions
       expressions
         .map do |number|
           begin
@@ -319,23 +357,15 @@ module TBMX
           rescue ArgumentError
             nil
           end
-        end.reject(&:nil?).reduce(function)
+        end.reject &:nil?
     end
 
-    def addition
-      reducable_math_function_handler :+
+    def reducable_math_function_handler(function)
+      numbers_from_expressions.reduce function
     end
 
-    def subtraction
-      reducable_math_function_handler :-
-    end
-
-    def multiplication
-      reducable_math_function_handler :*
-    end
-
-    def division
-      reducable_math_function_handler :/
+    def math_function_handler(function)
+      Math.send function, numbers_from_expressions.first
     end
 
     def user_command_handler

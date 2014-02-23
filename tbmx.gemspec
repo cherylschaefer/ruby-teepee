@@ -37,7 +37,7 @@
 
 Gem::Specification.new do |s|
   s.name = 'tbmx'
-  s.version = '0.5.0'
+  s.version = '0.5.1'
   s.date = '2014-02-23'
   s.summary = "TBMX is a markup language for ThinkingBicycle.com."
   s.description = "TBMX is a markup language, loosely based on Lisp and TeX, for ThinkingBicycle.com."
