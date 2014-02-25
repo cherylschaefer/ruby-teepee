@@ -294,48 +294,32 @@ module TBMX
         "#{Math::PI}"
       when "e"
         "#{Math::E}"
-      when "+"
-        reducable_math_function_handler :+
-      when "-"
-        reducable_math_function_handler :-
-      when "*"
-        reducable_math_function_handler :*
-      when "/"
-        reducable_math_function_handler :/
-      when "sin"
-        math_function_handler :sin
-      when "cos"
-        math_function_handler :cos
-      when "tan"
-        math_function_handler :tan
-      when "asin"
-        math_function_handler :asin
-      when "acos"
-        math_function_handler :acos
-      when "atan"
-        math_function_handler :atan
-      when "sinh"
-        math_function_handler :sinh
-      when "cosh"
-        math_function_handler :cosh
-      when "tanh"
-        math_function_handler :tanh
-      when "asinh"
-        math_function_handler :asinh
-      when "acosh"
-        math_function_handler :acosh
-      when "atanh"
-        math_function_handler :atanh
-      when "erfc"
-        math_function_handler :erfc
-      when "gamma"
-        math_function_handler :gamma
-      when "lgamma"
-        math_function_handler :lgamma
-      when "log10"
-        math_function_handler :log10
-      when "log2"
-        math_function_handler :log2
+      when "+", "-", "*", "/", "%"
+        reducable_math_function_handler command.word.to_sym
+      when "^", "**"
+        number, exponent = numbers_from_expressions
+        number.send :**, exponent
+      when "sin", "cos", "tan",
+        "asin", "acos", "atan",
+        "sinh", "cosh", "tanh",
+        "asinh", "acosh", "atanh",
+        "erf", "erfc",
+        "gamma", "lgamma",
+        "log10", "log2",
+        "sqrt"
+        math_function_handler command.word.to_sym
+      when "log"
+        base, number = numbers_from_expressions
+        if number.nil?
+          Math.log base
+        else
+          Math.log number, base
+        end
+      when "ldexp"
+        fraction, exponent = numbers_from_expressions
+        Math.ldexp fraction, exponent
+      when "hypot"
+        Math.sqrt numbers_from_expressions.map {|n| n**2}
       else
         command_error "unknown command #{command.to_html}"
       end
