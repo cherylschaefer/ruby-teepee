@@ -294,8 +294,24 @@ module TBMX
         "#{Math::PI}"
       when "e"
         "#{Math::E}"
-      when "+", "-", "*", "/", "%"
-        reducable_math_function_handler command.word.to_sym
+      when "+"
+        injectable_math_function_handler 0, :+
+      when "-"
+        if (numbers = numbers_from_expressions).length == 1
+          injectable_math_function_handler 0, :-
+        else
+          reducable_math_function_handler :-
+        end
+      when "*"
+        injectable_math_function_handler 1, :*
+      when "/"
+        if (numbers = numbers_from_expressions).length == 1
+          1 / numbers.first
+        else
+          reducable_math_function_handler :/
+        end
+      when "%"
+        injectable_math_function_handler numbers_from_expressions.first, :%
       when "^", "**"
         number, exponent = numbers_from_expressions
         number.send :**, exponent
@@ -342,6 +358,10 @@ module TBMX
             nil
           end
         end.reject &:nil?
+    end
+
+    def injectable_math_function_handler(initial, function)
+      numbers_from_expressions.inject initial, function
     end
 
     def reducable_math_function_handler(function)

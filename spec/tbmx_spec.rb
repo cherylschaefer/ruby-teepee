@@ -144,20 +144,44 @@ describe TBMX::Parser do
       TBMX::Parser.new(TWO_LINE_BOLD_BEFORE).to_html.should == TWO_LINE_BOLD_AFTER
     end
 
-    it "can correctly handle addition" do
-      TBMX::Parser.new("\\+{1 2 3 4}").to_html.should == para("10.0")
+    describe :addition do
+      it "works with multiple arguments" do
+        TBMX::Parser.new("\\+{1 2 3 4}").to_html.should == para("10.0")
+      end
+
+      it "works with a single argument" do
+        TBMX::Parser.new("\\+{123}").to_html.should == para("123.0")
+      end
     end
 
-    it "can correctly handle subtraction" do
-      TBMX::Parser.new("\\-{10 40}").to_html.should == para("-30.0")
+    describe :subtraction do
+      it "works with multiple arguments" do
+        TBMX::Parser.new("\\-{10 40}").to_html.should == para("-30.0")
+      end
+
+      it "works with a single argument" do
+        TBMX::Parser.new("\\-{123}").to_html.should == para("-123.0")
+      end
     end
 
-    it "can correctly handle multiplication" do
-      TBMX::Parser.new("\\*{10 -4.7}").to_html.should == para("-47.0")
+    describe :multiplication do
+      it "works with multiple arguments" do
+        TBMX::Parser.new("\\*{10 -4.7}").to_html.should == para("-47.0")
+      end
+
+      it "works with a single argument" do
+        TBMX::Parser.new("\\*{123}").to_html.should == para("123.0")
+      end
     end
 
-    it "can correctly handle division" do
-      TBMX::Parser.new("\\/{10 2}").to_html.should == para("5.0")
+    describe :division do
+      it "works with multiple arguments" do
+        TBMX::Parser.new("\\/{100 10 2}").to_html.should == para("5.0")
+      end
+
+      it "works with a single argument" do
+        TBMX::Parser.new("\\/{10}").to_html.should == para("0.1")
+      end
     end
 
     it "can nest mathematics" do
