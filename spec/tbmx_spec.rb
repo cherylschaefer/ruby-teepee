@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # -*- mode: Ruby -*-
 
-# Copyright © 2013-2014, Christopher Mark Gore,
+# Copyright © 2013-2015, Christopher Mark Gore,
 # Soli Deo Gloria,
 # All rights reserved.
 #
@@ -191,6 +191,24 @@ describe TBMX::Parser do
     it "can calculate some trigonometry" do
       TBMX::Parser.new("\\sin{0}").to_html.should == para("0.0")
       TBMX::Parser.new("\\cos{\\pi}").to_html.should == para("-1.0")
+    end
+  end
+
+  describe "degrees->radians" do
+    it "converts degrees to radians" do
+      TBMX::Parser.new("\\d2r{0}").to_html.should == para("0.0")
+      TBMX::Parser.new("\\deg->rad{0}").to_html.should == para("0.0")
+      TBMX::Parser.new("\\degrees->radians{0}").to_html.should == para("0.0")
+      TBMX::Parser.new("\\d2r{180.0}").to_html.should == para(Math::PI.to_s)
+    end
+  end
+
+  describe "radians->degrees" do
+    it "converts radians to degrees" do
+      TBMX::Parser.new("\\r2d{0}").to_html.should == para("0.0")
+      TBMX::Parser.new("\\rad->deg{0}").to_html.should == para("0.0")
+      TBMX::Parser.new("\\radians->degrees{0}").to_html.should == para("0.0")
+      TBMX::Parser.new("\\r2d{"+Math::PI.to_s+"}").to_html.should == para("180.0")
     end
   end
 end

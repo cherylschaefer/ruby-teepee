@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # -*- mode: Ruby -*-
 
-# Copyright © 2013-2014, Christopher Mark Gore,
+# Copyright © 2013-2015, Christopher Mark Gore,
 # Soli Deo Gloria,
 # All rights reserved.
 #
@@ -324,6 +324,14 @@ module TBMX
         "log10", "log2",
         "sqrt"
         math_function_handler command.word.to_sym
+      when "d2r", "deg->rad", "degrees->radians"
+        degrees = number_from_expression
+        radians = degrees * Math::PI / 180.0
+        radians
+      when "r2d", "rad->deg", "radians->degrees"
+        radians = number_from_expression
+        degrees = radians * 180.0 / Math::PI
+        degrees
       when "log"
         base, number = numbers_from_expressions
         if number.nil?
@@ -358,6 +366,10 @@ module TBMX
             nil
           end
         end.reject &:nil?
+    end
+
+    def number_from_expression
+      numbers_from_expressions.first
     end
 
     def injectable_math_function_handler(initial, function)
