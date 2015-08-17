@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # -*- mode: Ruby -*-
 
-# Copyright © 2013-2014, Christopher Mark Gore,
+# Copyright © 2013-2015, Christopher Mark Gore,
 # Soli Deo Gloria,
 # All rights reserved.
 #
@@ -37,8 +37,8 @@
 
 Gem::Specification.new do |s|
   s.name = 'tbmx'
-  s.version = '0.5.3'
-  s.date = '2014-02-25'
+  s.version = '0.5.4'
+  s.date = '2015-08-17'
   s.summary = "TBMX is a markup language for ThinkingBicycle.com."
   s.description = "TBMX is a markup language, loosely based on Lisp and TeX, for ThinkingBicycle.com."
   s.authors = ['Christopher Mark Gore']
