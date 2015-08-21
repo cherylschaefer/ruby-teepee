@@ -43,6 +43,18 @@ include ERB::Util
 module TBMX
   TB_COM = "http://thinkingbicycle.com"
 
+  module MathFunctions
+    class << self
+      def degrees2radians degrees
+        degrees * Math::PI / 180.0
+      end
+
+      def radians2degrees radians
+        radians * 180.0 / Math::PI
+      end
+    end
+  end
+
   class ParseError < RuntimeError
   end
 
@@ -325,13 +337,9 @@ module TBMX
         "sqrt"
         math_function_handler command.word.to_sym
       when "d2r", "deg->rad", "degrees->radians"
-        degrees = number_from_expression
-        radians = degrees * Math::PI / 180.0
-        radians
+        MathFunctions::degrees2radians number_from_expression
       when "r2d", "rad->deg", "radians->degrees"
-        radians = number_from_expression
-        degrees = radians * 180.0 / Math::PI
-        degrees
+        MathFunctions::radians2degrees number_from_expression
       when "log"
         base, number = numbers_from_expressions
         if number.nil?
