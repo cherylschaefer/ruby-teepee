@@ -49,6 +49,10 @@ module TBMX
         degrees * Math::PI / 180.0
       end
 
+      def lgamma n
+        Math::lgamma(n).first
+      end
+
       def radians2degrees radians
         radians * 180.0 / Math::PI
       end
@@ -332,7 +336,7 @@ module TBMX
         "sinh", "cosh", "tanh",
         "asinh", "acosh", "atanh",
         "erf", "erfc",
-        "gamma", "lgamma",
+        "gamma",
         "log10", "log2",
         "sqrt"
         math_function_handler command.word.to_sym
@@ -340,6 +344,8 @@ module TBMX
         MathFunctions::degrees2radians number_from_expression
       when "r2d", "rad->deg", "radians->degrees"
         MathFunctions::radians2degrees number_from_expression
+      when "lgamma"
+        MathFunctions::lgamma number_from_expression
       when "log"
         base, number = numbers_from_expressions
         if number.nil?
