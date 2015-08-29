@@ -346,6 +346,8 @@ module TBMX
         MathFunctions::radians2degrees number_from_expression
       when "lgamma"
         MathFunctions::lgamma number_from_expression
+      when "ln"
+        Math.log number_from_expression
       when "log"
         base, number = numbers_from_expressions
         if number.nil?
