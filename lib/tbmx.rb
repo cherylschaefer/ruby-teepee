@@ -336,9 +336,7 @@ module TBMX
         "sinh", "cosh", "tanh",
         "asinh", "acosh", "atanh",
         "erf", "erfc",
-        "gamma",
-        "log10", "log2",
-        "sqrt"
+        "gamma", "log10", "sqrt"
         math_function_handler command.word.to_sym
       when "d2r", "deg->rad", "degrees->radians"
         MathFunctions::degrees2radians number_from_expression
@@ -346,6 +344,8 @@ module TBMX
         MathFunctions::radians2degrees number_from_expression
       when "lgamma"
         MathFunctions::lgamma number_from_expression
+      when "ld", "log2"
+        Math.log2 number_from_expression
       when "ln"
         Math.log number_from_expression
       when "log"
