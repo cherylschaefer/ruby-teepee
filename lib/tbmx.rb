@@ -301,6 +301,8 @@ module TBMX
         keyword_id_command_handler
       when "tag-id", "tag_id"
         tag_id_command_handler
+      when "forum-id", "forum_id"
+        forum_id_command_handler
       when "folder-id", "folder_id"
         folder_id_command_handler
       when "bookmarks-folder-id", "bookmarks_folder_id", "bookmarks_folder-id", "bookmarks-folder_id",
@@ -454,6 +456,10 @@ module TBMX
 
     def folder_id_command_handler
       id_command_handler Folder
+    end
+
+    def forum_id_command_handler
+      id_command_handler Forum
     end
 
     def bookmarks_folder_id_command_handler
