@@ -279,7 +279,7 @@ module TBMX
         html_tag :b
       when "del", "s", "strike", "strikethrough", "strikeout"
         html_tag :del
-      when "italic", "i", "textit"
+      when "italic", "i", "textit", "it"
         html_tag :i
       when "underline", "u"
         html_tag :u
