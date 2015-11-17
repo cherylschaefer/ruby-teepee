@@ -36,15 +36,15 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 Gem::Specification.new do |s|
-  s.name = 'tbmx'
-  s.version = '0.5.8'
-  s.date = '2015-10-18'
-  s.summary = "TBMX is a markup language for ThinkingBicycle.com."
-  s.description = "TBMX is a markup language, loosely based on Lisp and TeX, for ThinkingBicycle.com."
+  s.name = 'teepee'
+  s.version = '0.5.9'
+  s.date = '2015-11-17'
+  s.summary = "Teepee is a markup language for ThinkingBicycle.com."
+  s.description = "Teepee is a markup language, loosely based on Lisp and TeX, for ThinkingBicycle.com."
   s.authors = ['Christopher Mark Gore']
   s.email = 'cgore@cgore.com'
   s.files = `git ls-files lib/`.split($/)
-  s.homepage = 'https://github.com/cgore/ruby-tbmx'
+  s.homepage = 'https://github.com/cgore/ruby-teepee'
   s.add_runtime_dependency 'activesupport', '~> 4.0'
   s.add_runtime_dependency 'monkey-patch'
 end

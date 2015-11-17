@@ -40,7 +40,7 @@ require 'monkey-patch'
 
 include ERB::Util
 
-module TBMX
+module Teepee
   TB_COM = "http://thinkingbicycle.com"
 
   module MathFunctions

@@ -1,8 +1,8 @@
-# ruby-tbmx
+# ruby-teepee
 
-[![Gem Version](https://badge.fury.io/rb/tbmx.svg)](http://badge.fury.io/rb/tbmx)
-[![Build Status](https://travis-ci.org/cgore/ruby-tbmx.svg?branch=master)](https://travis-ci.org/cgore/ruby-tbmx)
+[![Gem Version](https://badge.fury.io/rb/teepee.svg)](http://badge.fury.io/rb/teepee)
+[![Build Status](https://travis-ci.org/cgore/ruby-teepee.svg?branch=master)](https://travis-ci.org/cgore/ruby-teepee)
 
-TBMX is a markup language, a weird cross between TeX and Lisp, still in early development.
+Teepee is a markup language, a weird cross between TeX and Lisp, still in early development.
 
-The user-level documentation for TBMX [can be found here](http://thinkingbicycle.com/help/tbmx).
+The user-level documentation for Teepee [can be found here](http://thinkingbicycle.com/help/teepee).

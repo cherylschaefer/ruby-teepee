@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # -*- mode: Ruby -*-
 
-# Copyright © 2013, Christopher Mark Gore,
+# Copyright © 2013 - 2015, Christopher Mark Gore,
 # Soli Deo Gloria,
 # All rights reserved.
 #
@@ -35,6 +35,6 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-TBMX_TOPDIR = File.expand_path ".."
-TBMX_LIBDIR = TBMX_TOPDIR + "/lib/"
-$:.unshift TBMX_LIBDIR
+TEEPEE_TOPDIR = File.expand_path ".."
+TEEPEE_LIBDIR = TEEPEE_TOPDIR + "/lib/"
+$:.unshift TEEPEE_LIBDIR

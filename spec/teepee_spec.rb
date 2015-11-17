@@ -37,7 +37,7 @@
 
 require 'spec_helper'
 
-require 'tbmx'
+require 'teepee'
 
 TWO_PARAGRAPHS_BEFORE =
 "Line 1
@@ -72,143 +72,143 @@ def para(string)
   "<p>\n#{string}\n</p>\n"
 end
 
-describe TBMX::Parser do
+describe Teepee::Parser do
   it "can be instantiated" do
-    TBMX::Parser.new("").should be_a TBMX::Parser
+    Teepee::Parser.new("").should be_a Teepee::Parser
   end
 
   describe :to_html do
     it "can correctly parse a single word" do
-      TBMX::Parser.new("Word").to_html.should == para("Word")
+      Teepee::Parser.new("Word").to_html.should == para("Word")
     end
 
     it "can correctly parse a single non-english word" do
-      TBMX::Parser.new("Λόγος").to_html.should == para("Λόγος")
+      Teepee::Parser.new("Λόγος").to_html.should == para("Λόγος")
     end
 
     it "escapes < and >" do
-      TBMX::Parser.new("<b>not bold</b>").to_html.should ==
+      Teepee::Parser.new("<b>not bold</b>").to_html.should ==
         para("&lt;b&gt;not bold&lt;/b&gt;")
     end
 
     it "escapes &" do
-      TBMX::Parser.new("not &lt; less-than").to_html.should ==
+      Teepee::Parser.new("not &lt; less-than").to_html.should ==
         para("not &amp;lt; less-than")
     end
 
     it "can correctly split paragraphs" do
-      TBMX::Parser.new(TWO_PARAGRAPHS_BEFORE).to_html.should == TWO_PARAGRAPHS_AFTER
+      Teepee::Parser.new(TWO_PARAGRAPHS_BEFORE).to_html.should == TWO_PARAGRAPHS_AFTER
     end
 
     it "can correctly handle bold" do
-      TBMX::Parser.new("Soli \\b{Deo} Gloria").to_html.should ==
+      Teepee::Parser.new("Soli \\b{Deo} Gloria").to_html.should ==
         para("Soli <b>Deo</b> Gloria")
     end
 
     it "can correctly handle italics" do
-      TBMX::Parser.new("Soli \\i{Deo} Gloria").to_html.should ==
+      Teepee::Parser.new("Soli \\i{Deo} Gloria").to_html.should ==
         para("Soli <i>Deo</i> Gloria")
     end
 
     it "can correctly handle subscripts" do
-      TBMX::Parser.new("Soli \\sub{Deo} Gloria").to_html.should ==
+      Teepee::Parser.new("Soli \\sub{Deo} Gloria").to_html.should ==
         para("Soli <sub>Deo</sub> Gloria")
     end
 
     it "can correctly handle superscripts" do
-      TBMX::Parser.new("Soli \\sup{Deo} Gloria").to_html.should ==
+      Teepee::Parser.new("Soli \\sup{Deo} Gloria").to_html.should ==
         para("Soli <sup>Deo</sup> Gloria")
     end
 
     it "can correctly handle a command around the entire input" do
-      TBMX::Parser.new("\\b{Soli Deo Gloria}").to_html.should ==
+      Teepee::Parser.new("\\b{Soli Deo Gloria}").to_html.should ==
         para("<b>Soli Deo Gloria</b>")
     end
 
     it "can correctly handle two commands in a row" do
-      TBMX::Parser.new("Soli \\b{Deo} \\i{Gloria}").to_html.should ==
+      Teepee::Parser.new("Soli \\b{Deo} \\i{Gloria}").to_html.should ==
         para("Soli <b>Deo</b> <i>Gloria</i>")
     end
 
     it "can correctly handle nested commands" do
-      TBMX::Parser.new("Soli \\b{\\i{Deo}} Gloria").to_html.should ==
+      Teepee::Parser.new("Soli \\b{\\i{Deo}} Gloria").to_html.should ==
         para("Soli <b><i>Deo</i></b> Gloria")
     end
 
     it "can correctly handle three-deep nested commands" do
-      TBMX::Parser.new("Soli \\sup{\\b{\\i{Deo}}} Gloria").to_html.should ==
+      Teepee::Parser.new("Soli \\sup{\\b{\\i{Deo}}} Gloria").to_html.should ==
         para("Soli <sup><b><i>Deo</i></b></sup> Gloria")
     end
 
     it "can correctly handle commands split over multiple lines" do
-      TBMX::Parser.new(TWO_LINE_BOLD_BEFORE).to_html.should == TWO_LINE_BOLD_AFTER
+      Teepee::Parser.new(TWO_LINE_BOLD_BEFORE).to_html.should == TWO_LINE_BOLD_AFTER
     end
 
     describe :addition do
       it "works with multiple arguments" do
-        TBMX::Parser.new("\\+{1 2 3 4}").to_html.should == para("10.0")
+        Teepee::Parser.new("\\+{1 2 3 4}").to_html.should == para("10.0")
       end
 
       it "works with a single argument" do
-        TBMX::Parser.new("\\+{123}").to_html.should == para("123.0")
+        Teepee::Parser.new("\\+{123}").to_html.should == para("123.0")
       end
     end
 
     describe :subtraction do
       it "works with multiple arguments" do
-        TBMX::Parser.new("\\-{10 40}").to_html.should == para("-30.0")
+        Teepee::Parser.new("\\-{10 40}").to_html.should == para("-30.0")
       end
 
       it "works with a single argument" do
-        TBMX::Parser.new("\\-{123}").to_html.should == para("-123.0")
+        Teepee::Parser.new("\\-{123}").to_html.should == para("-123.0")
       end
     end
 
     describe :multiplication do
       it "works with multiple arguments" do
-        TBMX::Parser.new("\\*{10 -4.7}").to_html.should == para("-47.0")
+        Teepee::Parser.new("\\*{10 -4.7}").to_html.should == para("-47.0")
       end
 
       it "works with a single argument" do
-        TBMX::Parser.new("\\*{123}").to_html.should == para("123.0")
+        Teepee::Parser.new("\\*{123}").to_html.should == para("123.0")
       end
     end
 
     describe :division do
       it "works with multiple arguments" do
-        TBMX::Parser.new("\\/{100 10 2}").to_html.should == para("5.0")
+        Teepee::Parser.new("\\/{100 10 2}").to_html.should == para("5.0")
       end
 
       it "works with a single argument" do
-        TBMX::Parser.new("\\/{10}").to_html.should == para("0.1")
+        Teepee::Parser.new("\\/{10}").to_html.should == para("0.1")
       end
     end
 
     it "can nest mathematics" do
-      TBMX::Parser.new("\\+{10 \\*{3 5} \\-{\\+{4 5} 2}").to_html.should == para("32.0")
+      Teepee::Parser.new("\\+{10 \\*{3 5} \\-{\\+{4 5} 2}").to_html.should == para("32.0")
     end
 
     it "can calculate some trigonometry" do
-      TBMX::Parser.new("\\sin{0}").to_html.should == para("0.0")
-      TBMX::Parser.new("\\cos{\\pi}").to_html.should == para("-1.0")
+      Teepee::Parser.new("\\sin{0}").to_html.should == para("0.0")
+      Teepee::Parser.new("\\cos{\\pi}").to_html.should == para("-1.0")
     end
   end
 
   describe "degrees->radians" do
     it "converts degrees to radians" do
-      TBMX::Parser.new("\\d2r{0}").to_html.should == para("0.0")
-      TBMX::Parser.new("\\deg->rad{0}").to_html.should == para("0.0")
-      TBMX::Parser.new("\\degrees->radians{0}").to_html.should == para("0.0")
-      TBMX::Parser.new("\\d2r{180.0}").to_html.should == para(Math::PI.to_s)
+      Teepee::Parser.new("\\d2r{0}").to_html.should == para("0.0")
+      Teepee::Parser.new("\\deg->rad{0}").to_html.should == para("0.0")
+      Teepee::Parser.new("\\degrees->radians{0}").to_html.should == para("0.0")
+      Teepee::Parser.new("\\d2r{180.0}").to_html.should == para(Math::PI.to_s)
     end
   end
 
   describe "radians->degrees" do
     it "converts radians to degrees" do
-      TBMX::Parser.new("\\r2d{0}").to_html.should == para("0.0")
-      TBMX::Parser.new("\\rad->deg{0}").to_html.should == para("0.0")
-      TBMX::Parser.new("\\radians->degrees{0}").to_html.should == para("0.0")
-      TBMX::Parser.new("\\r2d{"+Math::PI.to_s+"}").to_html.should == para("180.0")
+      Teepee::Parser.new("\\r2d{0}").to_html.should == para("0.0")
+      Teepee::Parser.new("\\rad->deg{0}").to_html.should == para("0.0")
+      Teepee::Parser.new("\\radians->degrees{0}").to_html.should == para("0.0")
+      Teepee::Parser.new("\\r2d{"+Math::PI.to_s+"}").to_html.should == para("180.0")
     end
   end
 end
