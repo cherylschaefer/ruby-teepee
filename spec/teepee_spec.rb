@@ -106,7 +106,7 @@ describe Teepee::Parser do
     end
 
     it "can correctly handle italics" do
-      Teepee::Parser.new("Soli \\i{Deo} Gloria").to_html.should ==
+      Teepee::Parser.new("Soli \\it{Deo} Gloria").to_html.should ==
         para("Soli <i>Deo</i> Gloria")
     end
 
@@ -126,17 +126,17 @@ describe Teepee::Parser do
     end
 
     it "can correctly handle two commands in a row" do
-      Teepee::Parser.new("Soli \\b{Deo} \\i{Gloria}").to_html.should ==
+      Teepee::Parser.new("Soli \\b{Deo} \\it{Gloria}").to_html.should ==
         para("Soli <b>Deo</b> <i>Gloria</i>")
     end
 
     it "can correctly handle nested commands" do
-      Teepee::Parser.new("Soli \\b{\\i{Deo}} Gloria").to_html.should ==
+      Teepee::Parser.new("Soli \\b{\\it{Deo}} Gloria").to_html.should ==
         para("Soli <b><i>Deo</i></b> Gloria")
     end
 
     it "can correctly handle three-deep nested commands" do
-      Teepee::Parser.new("Soli \\sup{\\b{\\i{Deo}}} Gloria").to_html.should ==
+      Teepee::Parser.new("Soli \\sup{\\b{\\it{Deo}}} Gloria").to_html.should ==
         para("Soli <sup><b><i>Deo</i></b></sup> Gloria")
     end
 

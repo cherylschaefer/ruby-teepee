@@ -279,7 +279,9 @@ module Teepee
         html_tag :b
       when "del", "s", "strike", "strikethrough", "strikeout"
         html_tag :del
-      when "italic", "i", "textit", "it"
+      when "i"
+        command_error "Complex numbers are not yet supported."
+      when "italic", "textit", "it"
         html_tag :i
       when "underline", "u"
         html_tag :u
