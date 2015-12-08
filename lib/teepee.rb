@@ -41,25 +41,11 @@ require 'monkey-patch'
 require 'teepee/constants'
 require 'teepee/errors'
 require 'teepee/parser-node'
+require 'teepee/token'
 
 include ERB::Util
 
 module Teepee
-  class Token < ParserNode
-    class << self
-      # The child classes should implement this method.  If there is an
-      # immediate match, they should return a newly-created instance of
-      # themselves and the rest of the input as a string.  If there is no match,
-      # they should return nil.
-      def matches? text
-        raise NotImplementedError,
-              "Child class #{self.class} should implement this."
-      end
-    end
-  end
-
-  ###############################################################################
-
   class Commander
     def command_error message
       %{<span style="color: red">[#{message}]</span>}
