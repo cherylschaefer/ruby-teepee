@@ -47,41 +47,11 @@ require 'teepee/actionable-commander'
 require 'teepee/single-character-token'
 require 'teepee/string-token'
 require 'teepee/number-token'
+require 'teepee/tokenizer'
 
 include ERB::Util
 
 module Teepee
-  class Tokenizer
-    attr_reader :text, :tokens
-    def initialize(text)
-      @text = text
-      tokenize
-    end
-
-    def tokenize
-      @tokens = []
-      rest = text.gsub("\r", "")
-      while rest.length > 0
-        if result =     BackslashToken.matches?(rest) or # Single Character Tokens
-           result =     LeftBraceToken.matches?(rest) or
-           result =    RightBraceToken.matches?(rest) or
-           result = EmptyNewlinesToken.matches?(rest) or # String Tokens
-           result =    WhitespaceToken.matches?(rest) or
-           result =        NumberToken.matches?(rest) or
-           result =          WordToken.matches?(rest)
-        then
-          @tokens << result[0]
-          rest = result[1]
-        else
-          raise RuntimeError, "Couldn't tokenize the remaining text."
-        end
-      end
-      return @tokens
-    end
-  end
-
-  ###############################################################################
-
   class CommandParser < ParserNode
     attr_reader :command, :expressions
 
