@@ -35,11 +35,6 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-require 'active_support/all'
-require 'monkey-patch'
-
-require 'teepee/constants'
-require 'teepee/errors'
 require 'teepee/parser-node'
 require 'teepee/token'
 require 'teepee/commander'
@@ -49,31 +44,37 @@ require 'teepee/string-token'
 require 'teepee/number-token'
 require 'teepee/tokenizer'
 require 'teepee/command-parser'
-require 'teepee/paragraph-parser'
-
-include ERB::Util
 
 module Teepee
-  class Parser < ParserNode
-    attr_reader :paragraphs, :split_tokens, :text, :tokenizer
+  class ParagraphParser < ParserNode
+    attr_reader :expressions, :tokens
 
-    def tokens
-      tokenizer.tokens
-    end
-
-    def initialize(text)
-      @text = text
-      @tokenizer = Tokenizer.new text
+    def initialize(tokens)
+      raise ArgumentError if not tokens.is_a? Array
+      tokens.each {|token| raise ArgumentError if not token.kind_of? ParserNode}
+      @tokens = tokens
       parse
     end
 
     def parse
-      @split_tokens = tokens.split {|token| token.class == EmptyNewlinesToken}
-      @paragraphs = @split_tokens.map {|split_tokens| ParagraphParser.new split_tokens}
+      @expressions = []
+      rest = tokens
+      while rest.length > 0
+        if rest.first.is_a? WordToken
+          @expressions << rest.shift
+        elsif rest.first.is_a? WhitespaceToken
+          @expressions << rest.shift
+        elsif rest.first.is_a? BackslashToken
+          command, rest = CommandParser.parse(rest)
+          @expressions << command
+        else
+          return self
+        end
+      end
     end
 
     def to_html
-      paragraphs.map(&:to_html).join "\n"
+      "<p>\n" + expressions.map(&:to_html).join + "\n</p>\n"
     end
   end
 end
