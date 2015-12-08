@@ -82,4 +82,42 @@ module Teepee
       end
     end
   end
+
+  class EmptyNewlinesToken < StringToken
+    FULL_MATCH_REGEX = /\A\n\n+\z/
+    FRONT_MATCH_REGEX = /\A\n\n+/
+    COUNT_REGEX = /[^\n]/
+
+    def newlines
+      text
+    end
+  end
+
+  class WhitespaceToken < StringToken
+    FULL_MATCH_REGEX = /\A\s+\z/
+    FRONT_MATCH_REGEX = /\A\s+/
+    COUNT_REGEX = /\S/
+
+    def whitespace
+      text
+    end
+
+    def to_html
+      " " # Replace all whitespace tokens with a single space.
+    end
+  end
+
+  class WordToken < StringToken
+    FULL_MATCH_REGEX = /\A[^\s{}\\]+\z/
+    FRONT_MATCH_REGEX = /[^\s{}\\]+/
+    COUNT_REGEX = /[\s{}\\]/
+
+    def to_html
+      html_escape text
+    end
+
+    def word
+      text
+    end
+  end
 end
