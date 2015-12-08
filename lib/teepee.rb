@@ -39,13 +39,11 @@ require 'active_support/all'
 require 'monkey-patch'
 
 require 'teepee/constants'
+require 'teepee/errors'
 
 include ERB::Util
 
 module Teepee
-  class ParseError < RuntimeError
-  end
-
   class ParserNode
   end
 
