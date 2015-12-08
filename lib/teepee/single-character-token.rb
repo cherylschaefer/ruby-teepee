@@ -57,4 +57,16 @@ module Teepee
       end
     end
   end
+
+  class BackslashToken < SingleCharacterToken
+    CHARACTER_MATCHED = "\\"
+  end
+
+  class LeftBraceToken < SingleCharacterToken
+    CHARACTER_MATCHED = "{"
+  end
+
+  class RightBraceToken < SingleCharacterToken
+    CHARACTER_MATCHED = "}"
+  end
 end

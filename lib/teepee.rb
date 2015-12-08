@@ -52,24 +52,6 @@ include ERB::Util
 module Teepee
   ###############################################################################
 
-  class BackslashToken < SingleCharacterToken
-    CHARACTER_MATCHED = "\\"
-  end
-
-  ###############################################################################
-
-  class LeftBraceToken < SingleCharacterToken
-    CHARACTER_MATCHED = "{"
-  end
-
-  ###############################################################################
-
-  class RightBraceToken < SingleCharacterToken
-    CHARACTER_MATCHED = "}"
-  end
-
-  ###############################################################################
-
   class EmptyNewlinesToken < StringToken
     FULL_MATCH_REGEX = /\A\n\n+\z/
     FRONT_MATCH_REGEX = /\A\n\n+/
