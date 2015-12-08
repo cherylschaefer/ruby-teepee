@@ -45,55 +45,11 @@ require 'teepee/token'
 require 'teepee/commander'
 require 'teepee/actionable-commander'
 require 'teepee/single-character-token'
+require 'teepee/string-token'
 
 include ERB::Util
 
 module Teepee
-  class StringToken < Token
-    attr_reader :text
-
-    def initialize(text)
-      raise ArgumentError if not text.is_a? String
-      raise ArgumentError if not text =~ self.class.full_match_regex
-      @text = text
-    end
-
-    def to_s
-      @text
-    end
-
-    def to_html
-      @text
-    end
-
-    class << self
-      def full_match_regex
-        self::FULL_MATCH_REGEX # Define this in a child class.
-      end
-
-      def front_match_regex
-        self::FRONT_MATCH_REGEX # Define this in a child class.
-      end
-
-      def count_regex
-        self::COUNT_REGEX # Define this in a child class.
-      end
-
-      def matches? text
-        if text =~ front_match_regex
-          count = text.index count_regex
-          if count.nil?
-            return [self.new(text), ""]
-          else
-            return [self.new(text[0 ... count]), text[count .. -1]]
-          end
-        else
-          return nil
-        end
-      end
-    end
-  end
-
   ###############################################################################
 
   class BackslashToken < SingleCharacterToken
