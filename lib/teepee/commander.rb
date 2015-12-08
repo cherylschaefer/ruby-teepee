@@ -53,6 +53,16 @@ module Teepee
       command_error "The command #{command} is not yet implemented."
     end
 
+    def ensure_numeric number
+      if number.kind_of? Complex
+        command_error "Complex numbers are not yet supported."
+      elsif not number.kind_of? Numeric
+        command_error "Non-numeric result."
+      else
+        number
+      end
+    end
+
     def html_tag tag, expressions
       "<#{tag}>" + expressions.map(&:to_html).join + "</#{tag}>"
     end
@@ -79,59 +89,59 @@ module Teepee
     #----------------------------------------------------------------------------
 
     def + *numbers
-      numbers.inject 0, :+
+      ensure_numeric numbers.inject 0, :+
     end
 
     def - *numbers
       if numbers.length == 1
-        - numbers.first
+        ensure_numeric -numbers.first
       else
-        numbers.reduce :-
+        ensure_numeric numbers.reduce :-
       end
     end
 
     def * *numbers
-      numbers.inject 1, :*
+      ensure_numeric numbers.inject 1, :*
     end
 
     def / *numbers
       if numbers.length == 1
-        1 / numbers.first
+        ensure_numeric 1 / numbers.first
       else
-        numbers.reduce :/
+        ensure_numeric numbers.reduce :/
       end
     end
 
     def % *numbers
-      numbers.reduce :%
+      ensure_numeric numbers.reduce :%
     end
 
     def ** *numbers
-      numbers.reduce :**
+      ensure_numeric numbers.reduce :**
     end
 
     def acos number
-      Math.acos number
+      ensure_numeric Math.acos number
     end
 
     def acosh number
-      Math.acosh number
+      ensure_numeric Math.acosh number
     end
 
     def asin number
-      Math.asin number
+      ensure_numeric Math.asin number
     end
 
     def asinh number
-      Math.asinh number
+      ensure_numeric Math.asinh number
     end
 
     def atan number
-      Math.atan number
+      ensure_numeric Math.atan number
     end
 
     def atanh number
-      Math.atanh number
+      ensure_numeric Math.atanh number
     end
 
     def b expressions
@@ -155,15 +165,15 @@ module Teepee
     end
 
     def cos angle
-      Math.cos angle
+      ensure_numeric Math.cos angle
     end
 
     def cosh number
-      Math.cosh number
+      ensure_numeric Math.cosh number
     end
 
     def degrees2radians degrees
-      degrees * Math::PI / 180.0
+      ensure_numeric degrees * Math::PI / 180.0
     end
 
     def del expressions
@@ -171,15 +181,15 @@ module Teepee
     end
 
     def e
-      "#{Math::E}"
+      Math::E
     end
 
     def erf number
-      Math.erf number
+      ensure_numeric Math.erf number
     end
 
     def erfc number
-      Math.erfc number
+      ensure_numeric Math.erfc number
     end
 
     def folder_id id
@@ -191,7 +201,7 @@ module Teepee
     end
 
     def gamma number
-      Math.gamma number
+      ensure_numeric Math.gamma number
     end
 
     def i
@@ -203,15 +213,15 @@ module Teepee
     end
 
     def hypot numbers
-      Math.sqrt numbers.map {|n| n**2}
+      ensure_numeric Math.sqrt numbers.map {|n| n**2}
     end
 
     def ld n
-      Math.log2 n
+      ensure_numeric Math.log2 n
     end
 
     def ldexp fraction, exponent
-      Math.ldexp fraction, exponent
+      ensure_numeric Math.ldexp fraction, exponent
     end
 
     def left_brace
@@ -219,7 +229,7 @@ module Teepee
     end
 
     def lgamma n
-      Math::lgamma(n).first
+      ensure_numeric Math::lgamma(n).first
     end
 
     def link_id
@@ -227,28 +237,28 @@ module Teepee
     end
 
     def ln number
-      Math.log number
+      ensure_numeric Math.log number
     end
 
     def log base, number
       if number.nil?
         number, base = base, number
-        Math.log number # default to natural logarithm
+        ensure_numeric Math.log number # default to natural logarithm
       else
-        Math.log number, base
+        ensure_numeric Math.log number, base
       end
     end
 
     def log10 number
-      Math.log10 number
+      ensure_numeric Math.log10 number
     end
 
     def pi
-      "#{Math::PI}"
+      Math::PI
     end
 
     def radians2degrees radians
-      radians * 180.0 / Math::PI
+      ensure_numeric(radians * 180.0 / Math::PI)
     end
 
     def right_brace
@@ -256,11 +266,11 @@ module Teepee
     end
 
     def sin angle
-      Math.sin angle
+      ensure_numeric Math.sin angle
     end
 
     def sinh number
-      Math.sinh number
+      ensure_numeric Math.sinh number
     end
 
     def small expressions
@@ -268,7 +278,7 @@ module Teepee
     end
 
     def sqrt number
-      Math.sqrt number
+      ensure_numeric Math.sqrt number
     end
 
     def sub expressions
@@ -284,11 +294,11 @@ module Teepee
     end
 
     def tan angle
-      Math.tan angle
+      ensure_numeric Math.tan angle
     end
 
     def tanh number
-      Math.tanh number
+      ensure_numeric Math.tanh number
     end
 
     def tt expressions
