@@ -74,141 +74,165 @@ end
 
 describe Teepee::Parser do
   it "can be instantiated" do
-    Teepee::Parser.new("").should be_a Teepee::Parser
+    expect(Teepee::Parser.new(""))
+      .to be_a Teepee::Parser
   end
 
   describe :to_html do
     it "can correctly parse a single word" do
-      Teepee::Parser.new("Word").to_html.should == para("Word")
+      expect(Teepee::Parser.new("Word").to_html)
+            .== para("Word")
     end
 
     it "can correctly parse a single non-english word" do
-      Teepee::Parser.new("Λόγος").to_html.should == para("Λόγος")
+      expect(Teepee::Parser.new("Λόγος").to_html)
+            .== para("Λόγος")
     end
 
     it "escapes < and >" do
-      Teepee::Parser.new("<b>not bold</b>").to_html.should ==
-        para("&lt;b&gt;not bold&lt;/b&gt;")
+      expect(Teepee::Parser.new("<b>not bold</b>").to_html)
+            .== para("&lt;b&gt;not bold&lt;/b&gt;")
     end
 
     it "escapes &" do
-      Teepee::Parser.new("not &lt; less-than").to_html.should ==
-        para("not &amp;lt; less-than")
+      expect(Teepee::Parser.new("not &lt; less-than").to_html)
+            .== para("not &amp;lt; less-than")
     end
 
     it "can correctly split paragraphs" do
-      Teepee::Parser.new(TWO_PARAGRAPHS_BEFORE).to_html.should == TWO_PARAGRAPHS_AFTER
+      expect(Teepee::Parser.new(TWO_PARAGRAPHS_BEFORE).to_html)
+            .== TWO_PARAGRAPHS_AFTER
     end
 
     it "can correctly handle bold" do
-      Teepee::Parser.new("Soli \\b{Deo} Gloria").to_html.should ==
-        para("Soli <b>Deo</b> Gloria")
+      expect(Teepee::Parser.new("Soli \\b{Deo} Gloria").to_html)
+            .== para("Soli <b>Deo</b> Gloria")
     end
 
     it "can correctly handle italics" do
-      Teepee::Parser.new("Soli \\it{Deo} Gloria").to_html.should ==
-        para("Soli <i>Deo</i> Gloria")
+      expect(Teepee::Parser.new("Soli \\it{Deo} Gloria").to_html)
+            .== para("Soli <i>Deo</i> Gloria")
     end
 
     it "can correctly handle subscripts" do
-      Teepee::Parser.new("Soli \\sub{Deo} Gloria").to_html.should ==
-        para("Soli <sub>Deo</sub> Gloria")
+      expect(Teepee::Parser.new("Soli \\sub{Deo} Gloria").to_html)
+            .== para("Soli <sub>Deo</sub> Gloria")
     end
 
     it "can correctly handle superscripts" do
-      Teepee::Parser.new("Soli \\sup{Deo} Gloria").to_html.should ==
-        para("Soli <sup>Deo</sup> Gloria")
+      expect(Teepee::Parser.new("Soli \\sup{Deo} Gloria").to_html)
+            .== para("Soli <sup>Deo</sup> Gloria")
     end
 
     it "can correctly handle a command around the entire input" do
-      Teepee::Parser.new("\\b{Soli Deo Gloria}").to_html.should ==
-        para("<b>Soli Deo Gloria</b>")
+      expect(Teepee::Parser.new("\\b{Soli Deo Gloria}").to_html)
+            .== para("<b>Soli Deo Gloria</b>")
     end
 
     it "can correctly handle two commands in a row" do
-      Teepee::Parser.new("Soli \\b{Deo} \\it{Gloria}").to_html.should ==
-        para("Soli <b>Deo</b> <i>Gloria</i>")
+      expect(Teepee::Parser.new("Soli \\b{Deo} \\it{Gloria}").to_html)
+            .== para("Soli <b>Deo</b> <i>Gloria</i>")
     end
 
     it "can correctly handle nested commands" do
-      Teepee::Parser.new("Soli \\b{\\it{Deo}} Gloria").to_html.should ==
-        para("Soli <b><i>Deo</i></b> Gloria")
+      expect(Teepee::Parser.new("Soli \\b{\\it{Deo}} Gloria").to_html)
+            .== para("Soli <b><i>Deo</i></b> Gloria")
     end
 
     it "can correctly handle three-deep nested commands" do
-      Teepee::Parser.new("Soli \\sup{\\b{\\it{Deo}}} Gloria").to_html.should ==
-        para("Soli <sup><b><i>Deo</i></b></sup> Gloria")
+      expect(Teepee::Parser.new("Soli \\sup{\\b{\\it{Deo}}} Gloria").to_html)
+            .== para("Soli <sup><b><i>Deo</i></b></sup> Gloria")
     end
 
     it "can correctly handle commands split over multiple lines" do
-      Teepee::Parser.new(TWO_LINE_BOLD_BEFORE).to_html.should == TWO_LINE_BOLD_AFTER
+      expect(Teepee::Parser.new(TWO_LINE_BOLD_BEFORE).to_html)
+            .== TWO_LINE_BOLD_AFTER
     end
 
     describe :addition do
       it "works with multiple arguments" do
-        Teepee::Parser.new("\\+{1 2 3 4}").to_html.should == para("10.0")
+        expect(Teepee::Parser.new("\\+{1 2 3 4}").to_html)
+          .== para("10.0")
       end
 
       it "works with a single argument" do
-        Teepee::Parser.new("\\+{123}").to_html.should == para("123.0")
+        expect(Teepee::Parser.new("\\+{123}").to_html)
+          .== para("123.0")
       end
     end
 
     describe :subtraction do
       it "works with multiple arguments" do
-        Teepee::Parser.new("\\-{10 40}").to_html.should == para("-30.0")
+        expect(Teepee::Parser.new("\\-{10 40}").to_html)
+              .== para("-30.0")
       end
 
       it "works with a single argument" do
-        Teepee::Parser.new("\\-{123}").to_html.should == para("-123.0")
+        expect(Teepee::Parser.new("\\-{123}").to_html)
+          .== para("-123.0")
       end
     end
 
     describe :multiplication do
       it "works with multiple arguments" do
-        Teepee::Parser.new("\\*{10 -4.7}").to_html.should == para("-47.0")
+        expect(Teepee::Parser.new("\\*{10 -4.7}").to_html)
+              .== para("-47.0")
       end
 
       it "works with a single argument" do
-        Teepee::Parser.new("\\*{123}").to_html.should == para("123.0")
+        expect(Teepee::Parser.new("\\*{123}").to_html)
+              .== para("123.0")
       end
     end
 
     describe :division do
       it "works with multiple arguments" do
-        Teepee::Parser.new("\\/{100 10 2}").to_html.should == para("5.0")
+        expect(Teepee::Parser.new("\\/{100 10 2}").to_html)
+              .== para("5.0")
       end
 
       it "works with a single argument" do
-        Teepee::Parser.new("\\/{10}").to_html.should == para("0.1")
+        expect(Teepee::Parser.new("\\/{10}").to_html)
+              .== para("0.1")
       end
     end
 
     it "can nest mathematics" do
-      Teepee::Parser.new("\\+{10 \\*{3 5} \\-{\\+{4 5} 2}").to_html.should == para("32.0")
+      expect(Teepee::Parser.new("\\+{10 \\*{3 5} \\-{\\+{4 5} 2}").to_html)
+            .== para("32.0")
     end
 
     it "can calculate some trigonometry" do
-      Teepee::Parser.new("\\sin{0}").to_html.should == para("0.0")
-      Teepee::Parser.new("\\cos{\\pi}").to_html.should == para("-1.0")
+      expect(Teepee::Parser.new("\\sin{0}").to_html)
+            .== para("0.0")
+      expect(Teepee::Parser.new("\\cos{\\pi}").to_html)
+            .== para("-1.0")
     end
   end
 
   describe "degrees->radians" do
     it "converts degrees to radians" do
-      Teepee::Parser.new("\\d2r{0}").to_html.should == para("0.0")
-      Teepee::Parser.new("\\deg->rad{0}").to_html.should == para("0.0")
-      Teepee::Parser.new("\\degrees->radians{0}").to_html.should == para("0.0")
-      Teepee::Parser.new("\\d2r{180.0}").to_html.should == para(Math::PI.to_s)
+      expect(Teepee::Parser.new("\\d2r{0}").to_html)
+            .== para("0.0")
+      expect(Teepee::Parser.new("\\deg->rad{0}").to_html)
+            .== para("0.0")
+      expect(Teepee::Parser.new("\\degrees->radians{0}").to_html)
+            .== para("0.0")
+      expect(Teepee::Parser.new("\\d2r{180.0}").to_html)
+            .== para(Math::PI.to_s)
     end
   end
 
   describe "radians->degrees" do
     it "converts radians to degrees" do
-      Teepee::Parser.new("\\r2d{0}").to_html.should == para("0.0")
-      Teepee::Parser.new("\\rad->deg{0}").to_html.should == para("0.0")
-      Teepee::Parser.new("\\radians->degrees{0}").to_html.should == para("0.0")
-      Teepee::Parser.new("\\r2d{"+Math::PI.to_s+"}").to_html.should == para("180.0")
+      expect(Teepee::Parser.new("\\r2d{0}").to_html)
+            .== para("0.0")
+      expect(Teepee::Parser.new("\\rad->deg{0}").to_html)
+            .== para("0.0")
+      expect(Teepee::Parser.new("\\radians->degrees{0}").to_html)
+            .== para("0.0")
+      expect(Teepee::Parser.new("\\r2d{"+Math::PI.to_s+"}").to_html)
+            .== para("180.0")
     end
   end
 end
