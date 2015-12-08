@@ -38,11 +38,11 @@
 require 'active_support/all'
 require 'monkey-patch'
 
+require 'teepee/constants'
+
 include ERB::Util
 
 module Teepee
-  TB_COM = "http://thinkingbicycle.com"
-
   class ParseError < RuntimeError
   end
 
