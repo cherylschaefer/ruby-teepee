@@ -43,22 +43,6 @@ include ERB::Util
 module Teepee
   TB_COM = "http://thinkingbicycle.com"
 
-  module MathFunctions
-    class << self
-      def degrees2radians degrees
-        degrees * Math::PI / 180.0
-      end
-
-      def lgamma n
-        Math::lgamma(n).first
-      end
-
-      def radians2degrees radians
-        radians * 180.0 / Math::PI
-      end
-    end
-  end
-
   class ParseError < RuntimeError
   end
 
@@ -77,6 +61,318 @@ module Teepee
       end
     end
   end
+
+  ###############################################################################
+
+  class Commander
+    def command_error message
+      %{<span style="color: red">[#{message}]</span>}
+    end
+
+    def command_not_yet_implemented command
+      command_error "The command #{command} is not yet implemented."
+    end
+
+    def html_tag tag, expressions
+      "<#{tag}>" + expressions.map(&:to_html).join + "</#{tag}>"
+    end
+
+    def tb_href target, string
+      %{<a href="#{TB_COM}/#{target}">#{string}</a>}
+    end
+
+    def id_command_handler(id,
+                           klass,
+                           singular = klass.to_s.camelcase_to_snakecase,
+                           plural = singular.pluralize,
+                           partial = "#{plural}/inline",
+                           view="")
+      if not id
+        command_error "#{singular}_id: error: no #{singular} ID specified"
+      elsif not id.to_s =~ /\A[0-9]+\z/
+        command_error "#{singular}_id: error: invalid #{singular} ID specified"
+      else
+        tb_href "/#{plural}/#{id.to_s}/#{view}", "#{klass} ##{id.to_s}"
+      end
+    end
+
+    #----------------------------------------------------------------------------
+
+    def + *numbers
+      numbers.inject 0, :+
+    end
+
+    def - *numbers
+      if numbers.length == 1
+        - numbers.first
+      else
+        numbers.reduce :-
+      end
+    end
+
+    def * *numbers
+      numbers.inject 1, :*
+    end
+
+    def / *numbers
+      if numbers.length == 1
+        1 / numbers.first
+      else
+        numbers.reduce :/
+      end
+    end
+
+    def % *numbers
+      numbers.reduce :%
+    end
+
+    def ** *numbers
+      numbers.reduce :**
+    end
+
+    def acos number
+      Math.acos number
+    end
+
+    def acosh number
+      Math.acosh number
+    end
+
+    def asin number
+      Math.asin number
+    end
+
+    def asinh number
+      Math.asinh number
+    end
+
+    def atan number
+      Math.atan number
+    end
+
+    def atanh number
+      Math.atanh number
+    end
+
+    def b expressions
+      html_tag :b, expressions
+    end
+
+    def backslash
+      "\\"
+    end
+
+    def big expressions
+      html_tag :big, expressions
+    end
+
+    def bookmarks_folder_id id
+      id_command_handler id, Folder, "folder", "folders", "folders/bookmarks_inline", "bookmarks"
+    end
+
+    def br
+      "\n</br>\n"
+    end
+
+    def cos angle
+      Math.cos angle
+    end
+
+    def cosh number
+      Math.cosh number
+    end
+
+    def degrees2radians degrees
+      degrees * Math::PI / 180.0
+    end
+
+    def del expressions
+      html_tag :del, expressions
+    end
+
+    def e
+      "#{Math::E}"
+    end
+
+    def erf number
+      Math.erf number
+    end
+
+    def erfc number
+      Math.erfc number
+    end
+
+    def folder_id id
+      id_command_handler id, Folder
+    end
+
+    def forum_id id
+      id_command_handler id, Forum
+    end
+
+    def gamma number
+      Math.gamma number
+    end
+
+    def i
+      command_error "Complex numbers are not yet supported."
+    end
+
+    def it expressions
+      html_tag :i, expressions
+    end
+
+    def hypot numbers
+      Math.sqrt numbers.map {|n| n**2}
+    end
+
+    def ld n
+      Math.log2 n
+    end
+
+    def ldexp fraction, exponent
+      Math.ldexp fraction, exponent
+    end
+
+    def left_brace
+      "{"
+    end
+
+    def lgamma n
+      Math::lgamma(n).first
+    end
+
+    def link_id
+      id_command_handler id, Link
+    end
+
+    def ln number
+      Math.log number
+    end
+
+    def log base, number
+      if number.nil?
+        number, base = base, number
+        Math.log number # default to natural logarithm
+      else
+        Math.log number, base
+      end
+    end
+
+    def log10 number
+      Math.log10 number
+    end
+
+    def pi
+      "#{Math::PI}"
+    end
+
+    def radians2degrees radians
+      radians * 180.0 / Math::PI
+    end
+
+    def right_brace
+      "}"
+    end
+
+    def sin angle
+      Math.sin angle
+    end
+
+    def sinh number
+      Math.sinh number
+    end
+
+    def small expressions
+      html_tag :small, expressions
+    end
+
+    def sqrt number
+      Math.sqrt number
+    end
+
+    def sub expressions
+      html_tag :sub, expressions
+    end
+
+    def sup expressions
+      html_tag :sup, expressions
+    end
+
+    def tag_id id
+      id_command_handler id, Tag
+    end
+
+    def tan angle
+      Math.tan angle
+    end
+
+    def tanh number
+      Math.tanh number
+    end
+
+    def tt expressions
+      html_tag :tt, expressions
+    end
+
+    def u expressions
+      html_tag :u, expressions
+    end
+
+    def user user
+      if not user
+        command_error "user: error: no user specified"
+      else
+        tb_href "users/#{user}", user.to_s
+      end
+    end
+  end
+
+  ###############################################################################
+
+  class ActionableCommander < Commander
+    def initialize action_view, controller
+      @action_view = action_view
+      @controller = controller
+    end
+
+    def id_command_handler(id,
+                           klass,
+                           singular = klass.to_s.camelcase_to_snakecase,
+                           plural = singular.pluralize,
+                           partial = "#{plural}/inline",
+                           view="")
+      if not id
+        command_error "#{singular}_id: error: no #{singular} ID specified"
+      elsif not id.to_s =~ /\A[0-9]+\z/
+        command_error "#{singular}_id: error: invalid #{singular} ID specified"
+      else
+        thing = klass.find Integer(id.to_s)
+        if thing
+          @@action_view.render partial: partial,
+                               locals: {singular.to_sym => thing}
+        else
+          command_error "unknown #{singular} ID #{id.to_s}"
+        end
+      end
+    end
+
+    def user user
+      if not user
+        command_error "user: error: no user specified"
+      else
+        the_user = User.smart_find user.to_s
+        if the_user
+          @action_view.render partial: 'users/name_link',
+                              locals: {the_user: the_user}
+        else
+          command_error "unknown user #{user.to_s}"
+        end
+      end
+    end
+  end
+
+  ###############################################################################
 
   class SingleCharacterToken < Token
     def text
@@ -97,6 +393,8 @@ module Teepee
       end
     end
   end
+
+  ###############################################################################
 
   class StringToken < Token
     attr_reader :text
@@ -143,18 +441,25 @@ module Teepee
     end
   end
 
+  ###############################################################################
+
   class BackslashToken < SingleCharacterToken
     CHARACTER_MATCHED = "\\"
   end
+
+  ###############################################################################
 
   class LeftBraceToken < SingleCharacterToken
     CHARACTER_MATCHED = "{"
   end
 
+  ###############################################################################
+
   class RightBraceToken < SingleCharacterToken
     CHARACTER_MATCHED = "}"
   end
 
+  ###############################################################################
 
   class EmptyNewlinesToken < StringToken
     FULL_MATCH_REGEX = /\A\n\n+\z/
@@ -165,6 +470,8 @@ module Teepee
       text
     end
   end
+
+  ###############################################################################
 
   class WhitespaceToken < StringToken
     FULL_MATCH_REGEX = /\A\s+\z/
@@ -180,6 +487,8 @@ module Teepee
     end
   end
 
+  ###############################################################################
+
   class WordToken < StringToken
     FULL_MATCH_REGEX = /\A[^\s{}\\]+\z/
     FRONT_MATCH_REGEX = /[^\s{}\\]+/
@@ -193,6 +502,8 @@ module Teepee
       text
     end
   end
+
+  ###############################################################################
 
   class NumberToken < Token
     attr_reader :number, :text
@@ -218,6 +529,8 @@ module Teepee
       end
     end
   end
+
+  ###############################################################################
 
   class Tokenizer
     attr_reader :text, :tokens
@@ -248,6 +561,8 @@ module Teepee
     end
   end
 
+  ###############################################################################
+
   class CommandParser < ParserNode
     attr_reader :command, :expressions
 
@@ -255,7 +570,9 @@ module Teepee
       raise ArgumentError if not command.is_a? WordToken
       @command = command
       raise ArgumentError if not expressions.is_a? Array
-      expressions.each {|expression| raise ArgumentError if not expression.kind_of? ParserNode}
+      expressions.each do |expression|
+        raise ArgumentError if not expression.kind_of? ParserNode
+      end
       @expressions = expressions
     end
 
@@ -266,104 +583,133 @@ module Teepee
     def to_html
       case command.word
       when "backslash", "bslash"
-        "\\"
-      when "left-brace", "left_brace", "leftbrace", "lbrace", "opening-brace", "opening_brace",
-           "openingbrace", "obrace"
-        "{"
-      when "right-brace", "right_brace", "rightbrace", "rbrace", "closing-brace", "closing_brace",
-           "closingbrace", "cbrace"
-        "}"
+        @@commander.backslash
+      when "left-brace",
+           "left_brace",
+           "leftbrace",
+           "lbrace",
+           "opening-brace",
+           "opening_brace",
+           "openingbrace",
+           "obrace"
+        @@commander.left_brace
+      when "right-brace",
+           "right_brace",
+           "rightbrace",
+           "rbrace",
+           "closing-brace",
+           "closing_brace",
+           "closingbrace",
+           "cbrace"
+        @@commander.right_brace
       when "br", "newline"
-        "\n</br>\n"
+        @@commander.br
       when "bold", "b", "textbf"
-        html_tag :b
-      when "del", "s", "strike", "strikethrough", "strikeout"
-        html_tag :del
+        @@commander.b expressions
+      when "del",
+           "s",
+           "strike",
+           "strikethrough",
+           "strikeout"
+        @@commander.del expressions
       when "i"
-        command_error "Complex numbers are not yet supported."
-      when "italic", "textit", "it"
-        html_tag :i
-      when "underline", "u"
-        html_tag :u
-      when "tt", "texttt", "teletype", "typewriter"
-        html_tag :tt
+        @@commander.i
+      when "italic",
+           "textit",
+           "it"
+        @@commander.it expressions
+      when "underline",
+           "u"
+        @@commander.u expressions
+      when "tt",
+           "texttt",
+           "teletype",
+           "typewriter"
+        @@commander.tt expressions
       when "small"
-        html_tag :small
+        @@commander.small expressions
       when "big"
-        html_tag :big
-      when "subscript", "sub"
-        html_tag :sub
-      when "superscript", "sup"
-        html_tag :sup
-      when "user", "user-id", "user_id"
-        user_command_handler
-      when "link-id", "link_id"
-        link_id_command_handler
-      when "keyword-id", "keyword_id"
-        keyword_id_command_handler
-      when "tag-id", "tag_id"
-        tag_id_command_handler
-      when "forum-id", "forum_id"
-        forum_id_command_handler
-      when "folder-id", "folder_id"
-        folder_id_command_handler
-      when "bookmarks-folder-id", "bookmarks_folder_id", "bookmarks_folder-id", "bookmarks-folder_id",
-           "bookmark-folder-id",  "bookmark_folder_id",  "bookmark_folder-id",  "bookmark-folder_id"
-        bookmarks_folder_id_command_handler
+        @@commander.big expressions
+      when "subscript",
+           "sub"
+        @@commander.sub expressions
+      when "superscript",
+           "sup"
+        @@commander.sup expressions
+      when "user",
+           "user-id",
+           "user_id"
+        @@commander.user first_word_token
+      when "link-id",
+           "link_id"
+        @@commander.link_id first_word_token
+      when "keyword-id",
+           "keyword_id"
+        @@commander.keyword_id first_word_token
+      when "tag-id",
+           "tag_id"
+        @@commander.tag_id first_word_token
+      when "forum-id",
+           "forum_id"
+        @@commander.forum_id first_word_token
+      when "folder-id",
+           "folder_id"
+        @@commander.folder_id first_word_token
+      when "bookmarks-folder-id",
+           "bookmarks_folder_id",
+           "bookmarks_folder-id",
+           "bookmarks-folder_id",
+           "bookmark-folder-id",
+           "bookmark_folder_id",
+           "bookmark_folder-id",
+           "bookmark-folder_id"
+        @@commander.bookmarks_folder_id first_word_token
       when "pi"
-        "#{Math::PI}"
+        @@commander.pi
       when "e"
-        "#{Math::E}"
+        @@commander.e
       when "+"
-        injectable_math_function_handler 0, :+
+        @@commander.+ *numbers_from_expressions
       when "-"
-        if (numbers = numbers_from_expressions).length == 1
-          injectable_math_function_handler 0, :-
-        else
-          reducable_math_function_handler :-
-        end
+        @@commander.- *numbers_from_expressions
       when "*"
-        injectable_math_function_handler 1, :*
+        @@commander.* *numbers_from_expressions
       when "/"
-        if (numbers = numbers_from_expressions).length == 1
-          1 / numbers.first
-        else
-          reducable_math_function_handler :/
-        end
+        @@commander./ *numbers_from_expressions
       when "%"
-        injectable_math_function_handler numbers_from_expressions.first, :%
+        @@commander.% *numbers_from_expressions
       when "^", "**"
-        number, exponent = numbers_from_expressions
-        number.send :**, exponent
+        @@commander.** *numbers_from_expressions
       when "sin", "cos", "tan",
         "asin", "acos", "atan",
         "sinh", "cosh", "tanh",
         "asinh", "acosh", "atanh",
         "erf", "erfc",
         "gamma", "log10", "sqrt"
-        math_function_handler command.word.to_sym
-      when "d2r", "deg->rad", "degrees->radians"
-        MathFunctions::degrees2radians number_from_expression
-      when "r2d", "rad->deg", "radians->degrees"
-        MathFunctions::radians2degrees number_from_expression
+        @@commander.send command.word.to_sym, number_from_expression
+      when "d2r",
+           "deg->rad",
+           "degrees->radians"
+        @@commander.degrees2radians number_from_expression
+      when "r2d",
+           "rad->deg",
+           "radians->degrees"
+        @@commander.radians2degrees number_from_expression
       when "lgamma"
-        MathFunctions::lgamma number_from_expression
-      when "ld", "log2"
-        Math.log2 number_from_expression
+        @@commander.lgamma number_from_expression
+      when "ld",
+           "log2"
+        @@commander.ld number_from_expression
       when "ln"
-        Math.log number_from_expression
+        @@commander.ln number_from_expression
       when "log"
         base, number = numbers_from_expressions
-        if number.nil?
-          Math.log base
-        else
-          Math.log number, base
-        end
+        @@commander.log base, number
       when "ldexp"
         fraction, exponent = numbers_from_expressions
-        Math.ldexp fraction, exponent
+        @@commander.ldexp fraction, exponent
       when "hypot"
-        Math.sqrt numbers_from_expressions.map {|n| n**2}
+        @@commander.hypot numbers_from_expressions
       else
         command_error "unknown command #{command.to_html}"
       end
@@ -375,6 +721,10 @@ module Teepee
 
     def tb_href(target, string)
       %{<a href="#{TB_COM}/#{target}">#{string}</a>}
+    end
+
+    def first_word_token
+      expressions.select {|expr| expr.is_a? WordToken}.first
     end
 
     def numbers_from_expressions
@@ -392,83 +742,8 @@ module Teepee
       numbers_from_expressions.first
     end
 
-    def injectable_math_function_handler(initial, function)
-      numbers_from_expressions.inject initial, function
-    end
-
-    def reducable_math_function_handler(function)
-      numbers_from_expressions.reduce function
-    end
-
-    def math_function_handler(function)
-      Math.send function, numbers_from_expressions.first
-    end
-
-    def user_command_handler
-      user = expressions.select {|expr| expr.is_a? WordToken}.first
-      if not user
-        command_error "user: error: no user specified"
-      else
-        if @@action_view.kind_of? ActionView::Base
-          the_user = User.smart_find user.to_s
-          if the_user
-            @@action_view.render partial: 'users/name_link',
-                                 locals: {the_user: the_user}
-          else
-            command_error "unknown user #{user.to_s}"
-          end
-        else
-          tb_href "users/#{user}", user.to_s
-        end
-      end
-    end
-
-    def id_command_handler(klass,
-                           singular = klass.to_s.camelcase_to_snakecase,
-                           plural = singular.pluralize,
-                           partial = "#{plural}/inline",
-                           view="")
-      id = expressions.select {|expr| expr.is_a? WordToken}.first
-      if not id
-        command_error "#{singular}_id: error: no #{singular} ID specified"
-      elsif not id.to_s =~ /\A[0-9]+\z/
-        command_error "#{singular}_id: error: invalid #{singular} ID specified"
-      else
-        if @@action_view.kind_of? ActionView::Base
-          thing = klass.find Integer(id.to_s)
-          if thing
-            @@action_view.render partial: partial,
-                                 locals: {singular.to_sym => thing}
-          else
-            command_error "unknown #{singular} ID #{id.to_s}"
-          end
-        else
-          tb_href "/#{plural}/#{id.to_s}/#{view}", "#{klass} ##{id.to_s}"
-        end
-      end
-    end
-
-    def link_id_command_handler
-      id_command_handler Link
-    end
-
-    def tag_id_command_handler
-      id_command_handler Tag
-    end
-
-    def folder_id_command_handler
-      id_command_handler Folder
-    end
-
-    def forum_id_command_handler
-      id_command_handler Forum
-    end
-
-    def bookmarks_folder_id_command_handler
-      id_command_handler Folder, "folder", "folders", "folders/bookmarks_inline", "bookmarks"
-    end
-
     class << self
+      @@commander = Commander.new
       @@action_view = nil
       @@controller = nil
 
@@ -503,15 +778,13 @@ module Teepee
         end
       end
 
-      def action_view=(new)
-        @@action_view = new
-      end
-
-      def controller=(new)
-        @@controller = new
+      def commander= new
+        @@commander = new
       end
     end
   end
+
+  ###############################################################################
 
   class ParagraphParser < ParserNode
     attr_reader :expressions, :tokens
@@ -544,6 +817,8 @@ module Teepee
       "<p>\n" + expressions.map(&:to_html).join + "\n</p>\n"
     end
   end
+
+  ###############################################################################
 
   class Parser < ParserNode
     attr_reader :paragraphs, :split_tokens, :text, :tokenizer
