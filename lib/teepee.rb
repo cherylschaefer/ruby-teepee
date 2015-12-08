@@ -46,37 +46,11 @@ require 'teepee/commander'
 require 'teepee/actionable-commander'
 require 'teepee/single-character-token'
 require 'teepee/string-token'
+require 'teepee/number-token'
 
 include ERB::Util
 
 module Teepee
-  class NumberToken < Token
-    attr_reader :number, :text
-
-    def initialize(text)
-      raise ArgumentError if not text.is_a? String
-      @text = text
-    end
-
-    def parse
-    end
-
-    def to_s
-      number.to_s
-    end
-
-    def to_html
-      to_s
-    end
-
-    class << self
-      def matches? text
-      end
-    end
-  end
-
-  ###############################################################################
-
   class Tokenizer
     attr_reader :text, :tokens
     def initialize(text)
