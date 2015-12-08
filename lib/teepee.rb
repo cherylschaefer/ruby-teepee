@@ -40,13 +40,11 @@ require 'monkey-patch'
 
 require 'teepee/constants'
 require 'teepee/errors'
+require 'teepee/parser-node'
 
 include ERB::Util
 
 module Teepee
-  class ParserNode
-  end
-
   class Token < ParserNode
     class << self
       # The child classes should implement this method.  If there is an
