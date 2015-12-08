@@ -35,11 +35,6 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-module Teepee
-end
-
-include ERB::Util
-
 require 'active_support/all'
 require 'monkey-patch'
 
@@ -55,4 +50,28 @@ require 'teepee/number-token'
 require 'teepee/tokenizer'
 require 'teepee/command-parser'
 require 'teepee/paragraph-parser'
-require 'teepee/parser'
+
+module Teepee
+  class Parser < ParserNode
+    attr_reader :paragraphs, :split_tokens, :text, :tokenizer
+
+    def tokens
+      tokenizer.tokens
+    end
+
+    def initialize(text)
+      @text = text
+      @tokenizer = Tokenizer.new text
+      parse
+    end
+
+    def parse
+      @split_tokens = tokens.split {|token| token.class == EmptyNewlinesToken}
+      @paragraphs = @split_tokens.map {|split_tokens| ParagraphParser.new split_tokens}
+    end
+
+    def to_html
+      paragraphs.map(&:to_html).join "\n"
+    end
+  end
+end
