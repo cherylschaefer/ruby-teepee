@@ -43,54 +43,11 @@ require 'teepee/errors'
 require 'teepee/parser-node'
 require 'teepee/token'
 require 'teepee/commander'
+require 'teepee/actionable-commander'
 
 include ERB::Util
 
 module Teepee
-  class ActionableCommander < Commander
-    def initialize action_view, controller
-      @action_view = action_view
-      @controller = controller
-    end
-
-    def id_command_handler(id,
-                           klass,
-                           singular = klass.to_s.camelcase_to_snakecase,
-                           plural = singular.pluralize,
-                           partial = "#{plural}/inline",
-                           view="")
-      if not id
-        command_error "#{singular}_id: error: no #{singular} ID specified"
-      elsif not id.to_s =~ /\A[0-9]+\z/
-        command_error "#{singular}_id: error: invalid #{singular} ID specified"
-      else
-        thing = klass.find Integer(id.to_s)
-        if thing
-          @@action_view.render partial: partial,
-                               locals: {singular.to_sym => thing}
-        else
-          command_error "unknown #{singular} ID #{id.to_s}"
-        end
-      end
-    end
-
-    def user user
-      if not user
-        command_error "user: error: no user specified"
-      else
-        the_user = User.smart_find user.to_s
-        if the_user
-          @action_view.render partial: 'users/name_link',
-                              locals: {the_user: the_user}
-        else
-          command_error "unknown user #{user.to_s}"
-        end
-      end
-    end
-  end
-
-  ###############################################################################
-
   class SingleCharacterToken < Token
     def text
       self.class.character_matched
