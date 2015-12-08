@@ -44,32 +44,11 @@ require 'teepee/parser-node'
 require 'teepee/token'
 require 'teepee/commander'
 require 'teepee/actionable-commander'
+require 'teepee/single-character-token'
 
 include ERB::Util
 
 module Teepee
-  class SingleCharacterToken < Token
-    def text
-      self.class.character_matched
-    end
-
-    class << self
-      def character_matched
-        self::CHARACTER_MATCHED
-      end
-
-      def matches? text
-        if text.first == character_matched
-          return [self.new, text.rest]
-        else
-          return nil
-        end
-      end
-    end
-  end
-
-  ###############################################################################
-
   class StringToken < Token
     attr_reader :text
 
