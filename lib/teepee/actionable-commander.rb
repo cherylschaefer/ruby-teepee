@@ -64,8 +64,8 @@ module Teepee
       else
         thing = klass.find Integer(id.to_s)
         if thing
-          @@action_view.render partial: partial,
-                               locals: {singular.to_sym => thing}
+          @action_view.render partial: partial,
+                              locals: {singular.to_sym => thing}
         else
           command_error "unknown #{singular} ID #{id.to_s}"
         end
