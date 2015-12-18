@@ -82,7 +82,7 @@ module Teepee
       elsif not id.to_s =~ /\A[0-9]+\z/
         command_error "#{singular}_id: error: invalid #{singular} ID specified"
       else
-        tb_href "/#{plural}/#{id.to_s}/#{view}", "#{klass} ##{id.to_s}"
+        tb_href "/#{plural}/#{id.to_s}/#{view}", "#{klass.to_s} ##{id.to_s}"
       end
     end
 
@@ -157,7 +157,7 @@ module Teepee
     end
 
     def bookmarks_folder_id id
-      id_command_handler id, Folder, "folder", "folders", "folders/bookmarks_inline", "bookmarks"
+      id_command_handler id, :Folder, "folder", "folders", "folders/bookmarks_inline", "bookmarks"
     end
 
     def br
@@ -193,11 +193,11 @@ module Teepee
     end
 
     def folder_id id
-      id_command_handler id, Folder
+      id_command_handler id, :Folder
     end
 
     def forum_id id
-      id_command_handler id, Forum
+      id_command_handler id, :Forum
     end
 
     def gamma number
@@ -233,7 +233,7 @@ module Teepee
     end
 
     def link_id id
-      id_command_handler id, Link
+      id_command_handler id, :Link
     end
 
     def ln number
@@ -290,7 +290,7 @@ module Teepee
     end
 
     def tag_id id
-      id_command_handler id, Tag
+      id_command_handler id, :Tag
     end
 
     def tan angle

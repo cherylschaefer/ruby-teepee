@@ -235,4 +235,11 @@ describe Teepee::Parser do
             .== para("180.0")
     end
   end
+
+  describe :link_id do
+    it "builds out a href to a ThinkingBicycle Link" do
+      expect(Teepee::Parser.new("\\link-id{123}").to_html)
+        .== para("<a href=\"http://thinkingbicycle.com/links/123/\">Link #123</a>")
+    end
+  end
 end

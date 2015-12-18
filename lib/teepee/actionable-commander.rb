@@ -62,7 +62,7 @@ module Teepee
       elsif not id.to_s =~ /\A[0-9]+\z/
         command_error "#{singular}_id: error: invalid #{singular} ID specified"
       else
-        thing = klass.find Integer(id.to_s)
+        thing = eval(klass.to_s).find Integer(id.to_s)
         if thing
           @action_view.render partial: partial,
                               locals: {singular.to_sym => thing}
