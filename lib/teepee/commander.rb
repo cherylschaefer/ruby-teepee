@@ -232,7 +232,7 @@ module Teepee
       ensure_numeric Math::lgamma(n).first
     end
 
-    def link_id
+    def link_id id
       id_command_handler id, Link
     end
 
