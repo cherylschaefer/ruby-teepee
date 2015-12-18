@@ -38,10 +38,10 @@
 module Teepee
 end
 
-include ERB::Util
-
 require 'active_support/all'
 require 'monkey-patch'
+
+include ERB::Util
 
 require 'teepee/constants'
 require 'teepee/errors'
