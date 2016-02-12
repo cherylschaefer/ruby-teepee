@@ -133,6 +133,30 @@ module Teepee
       when "itemize",
            "ul"
         @@commander.itemize expressions
+      when "itemize-disc",
+           "ul-disc",
+           "itemize_disc",
+           "ul_disc",
+           "itemize-disk",
+           "ul-disk",
+           "itemize_disk",
+           "ul_disk"
+        @@commander.itemize_disc expressions
+      when "itemize-circle",
+           "ul-circle",
+           "itemize_circle",
+           "ul_circle"
+        @@commander.itemize_circle expressions
+      when "itemize-square",
+           "ul-square",
+           "itemize_square",
+           "ul_square"
+        @@commander.itemize_square expressions
+      when "itemize-none",
+           "ul-none",
+           "itemize_none",
+           "ul_none"
+        @@commander.itemize_none expressions
       when "enumerate",
            "ol"
         @@commander.enumerate expressions

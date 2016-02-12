@@ -254,6 +254,22 @@ module Teepee
       html_tag :ul, expressions
     end
 
+    def itemize_disc expressions
+      html_tag :ul, expressions, {style: "list-style-type:disc"}
+    end
+
+    def itemize_circle expressions
+      html_tag :ul, expressions, {style: "list-style-type:circle"}
+    end
+
+    def itemize_square expressions
+      html_tag :ul, expressions, {style: "list-style-type:square"}
+    end
+
+    def itemize_none expressions
+      html_tag :ul, expressions, {style: "list-style-type:none"}
+    end
+
     def hypot numbers
       ensure_numeric Math.sqrt numbers.map {|n| n**2}
     end
