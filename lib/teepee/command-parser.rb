@@ -160,6 +160,49 @@ module Teepee
       when "enumerate",
            "ol"
         @@commander.enumerate expressions
+      when "enumerate-numeric",
+           "enumerate_numeric",
+           "enumerate-1",
+           "ol-1",
+           "enumerate_1",
+           "ol_1"
+        @@commander.enumerate_numeric expressions
+      when "enumerate-uppercase",
+           "enumerate_uppercase",
+           "enumerate-upcase",
+           "enumerate_upcase",
+           "enumerate-A",
+           "ol-A",
+           "enumerate_A",
+           "ol_A"
+        @@commander.enumerate_uppercase expressions
+      when "enumerate-lowercase",
+           "enumerate_lowercase",
+           "enumerate-downcase",
+           "enumerate_downcase",
+           "enumerate-a",
+           "ol-a",
+           "enumerate_a",
+           "ol_a"
+        @@commander.enumerate_lowercase expressions
+      when "enumerate-roman-uppercase",
+           "enumerate_roman_uppercase",
+           "enumerate-roman-upcase",
+           "enumerate_roman_upcase",
+           "enumerate-I",
+           "ol-I",
+           "enumerate_I",
+           "ol_I"
+        @@commander.enumerate_roman_uppercase expressions
+      when "enumerate-roman-lowercase",
+           "enumerate_roman_lowercase",
+           "enumerate-roman-downcase",
+           "enumerate_roman_downcase",
+           "enumerate-i",
+           "ol-i",
+           "enumerate_i",
+           "ol_i"
+        @@commander.enumerate_roman_lowercase expressions
       when "item",
            "li"
         @@commander.item expressions

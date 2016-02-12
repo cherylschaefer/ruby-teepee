@@ -194,6 +194,26 @@ module Teepee
       html_tag :ol, expressions
     end
 
+    def enumerate_numeric expressions
+      html_tag :ol, expressions, {type: "1"}
+    end
+
+    def enumerate_uppercase expressions
+      html_tag :ol, expressions, {type: "A"}
+    end
+
+    def enumerate_lowercase expressions
+      html_tag :ol, expressions, {type: "a"}
+    end
+
+    def enumerate_roman_uppercase expressions
+      html_tag :ol, expressions, {type: "I"}
+    end
+
+    def enumerate_roman_lowercase expressions
+      html_tag :ol, expressions, {type: "i"}
+    end
+
     def erf number
       ensure_numeric Math.erf number
     end
