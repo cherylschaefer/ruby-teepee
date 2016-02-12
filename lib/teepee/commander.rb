@@ -371,6 +371,22 @@ module Teepee
       html_tag :sup, expressions
     end
 
+    def table expressions
+      html_tag :table, expressions
+    end
+
+    def table_data expressions
+      html_tag :td, expressions
+    end
+
+    def table_header expressions
+      html_tag :th, expressions
+    end
+
+    def table_row expressions
+      html_tag :tr, expressions
+    end
+
     def tag_id id
       id_command_handler id, :Tag
     end

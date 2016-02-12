@@ -206,6 +206,22 @@ module Teepee
       when "item",
            "li"
         @@commander.item expressions
+      when "table"
+        @@commander.table expressions
+      when "tr",
+           "table-row",
+           "table_row"
+        @@commander.table_row expressions
+      when "th",
+           "table-header",
+           "table_header"
+        @@commander.table_header expressions
+      when "td",
+           "table-data",
+           "table_data",
+           "table-cell",
+           "table_cell"
+        @@commander.table_data expressions
       when "user",
            "user-id",
            "user_id"
