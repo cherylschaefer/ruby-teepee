@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # -*- mode: Ruby -*-
 
-# Copyright © 2013-2015, Christopher Mark Gore,
+# Copyright © 2013-2016, Christopher Mark Gore,
 # Soli Deo Gloria,
 # All rights reserved.
 #
@@ -214,6 +214,10 @@ module Teepee
 
     def hypot numbers
       ensure_numeric Math.sqrt numbers.map {|n| n**2}
+    end
+
+    def keyword_id id
+      id_command_handler id, :Keyword
     end
 
     def ld n
