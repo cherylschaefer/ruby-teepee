@@ -208,6 +208,30 @@ module Teepee
       ensure_numeric Math.gamma number
     end
 
+    def h1 expressions
+      html_tag :h1, expressions
+    end
+
+    def h2 expressions
+      html_tag :h2gg, expressions
+    end
+
+    def h3 expressions
+      html_tag :h3, expressions
+    end
+
+    def h4 expressions
+      html_tag :h4, expressions
+    end
+
+    def h5 expressions
+      html_tag :h5, expressions
+    end
+
+    def h6 expressions
+      html_tag :h6, expressions
+    end
+
     def i
       command_error "Complex numbers are not yet supported."
     end

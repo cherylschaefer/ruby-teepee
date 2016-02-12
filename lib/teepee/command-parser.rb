@@ -118,6 +118,18 @@ module Teepee
       when "superscript",
            "sup"
         @@commander.sup expressions
+      when "h1"
+        @@commander.h1 expressions
+      when "h2"
+        @@commander.h2 expressions
+      when "h3"
+        @@commander.h3 expressions
+      when "h4"
+        @@commander.h4 expressions
+      when "h5"
+        @@commander.h5 expressions
+      when "h6"
+        @@commander.h6 expressions
       when "itemize",
            "ul"
         @@commander.itemize expressions
