@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # -*- mode: Ruby -*-
 
-# Copyright © 2013-2015, Christopher Mark Gore,
+# Copyright © 2013-2016, Christopher Mark Gore,
 # Soli Deo Gloria,
 # All rights reserved.
 #
@@ -118,6 +118,15 @@ module Teepee
       when "superscript",
            "sup"
         @@commander.sup expressions
+      when "itemize",
+           "ul"
+        @@commander.itemize expressions
+      when "enumerate",
+           "ol"
+        @@commander.enumerate expressions
+      when "item",
+           "li"
+        @@commander.item expressions
       when "user",
            "user-id",
            "user_id"

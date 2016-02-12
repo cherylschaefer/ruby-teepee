@@ -184,6 +184,10 @@ module Teepee
       Math::E
     end
 
+    def enumerate expressions
+      html_tag :ol, expressions
+    end
+
     def erf number
       ensure_numeric Math.erf number
     end
@@ -210,6 +214,14 @@ module Teepee
 
     def it expressions
       html_tag :i, expressions
+    end
+
+    def item expressions
+      html_tag :li, expressions
+    end
+
+    def itemize expressions
+      html_tag :ol, expressions
     end
 
     def hypot numbers
