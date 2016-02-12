@@ -63,8 +63,14 @@ module Teepee
       end
     end
 
-    def html_tag tag, expressions
-      "<#{tag}>" + expressions.map(&:to_html).join + "</#{tag}>"
+    def html_tag tag, expressions, attribs=nil
+      opening_tag = if attribs
+                      attribs_string = attribs.map {|k,v| %{"#{k}"="#{v}"}}.join " "
+                      "<#{tag} #{attribs_string}>"
+                    else
+                      "<#{tag}>"
+                    end
+      opening_tag + expressions.map(&:to_html).join + "</#{tag}>"
     end
 
     def tb_href target, string
