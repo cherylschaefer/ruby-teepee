@@ -251,7 +251,7 @@ module Teepee
     end
 
     def itemize expressions
-      html_tag :ol, expressions
+      html_tag :ul, expressions
     end
 
     def hypot numbers
