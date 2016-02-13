@@ -37,7 +37,7 @@
 
 Gem::Specification.new do |s|
   s.name = 'teepee'
-  s.version = '0.7.5'
+  s.version = '0.7.7'
   s.date = '2016-02-12'
   s.summary = "Teepee is a markup language for ThinkingBicycle.com."
   s.description = "Teepee is a markup language, loosely based on Lisp and TeX, for ThinkingBicycle.com."
@@ -45,6 +45,6 @@ Gem::Specification.new do |s|
   s.email = 'cgore@cgore.com'
   s.files = `git ls-files lib/`.split($/)
   s.homepage = 'https://github.com/cgore/ruby-teepee'
-  s.add_runtime_dependency 'activesupport', '~> 4.0'
+  s.add_runtime_dependency 'activesupport', '>= 4'
   s.add_runtime_dependency 'monkey-patch'
 end
