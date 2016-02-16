@@ -220,6 +220,10 @@ module Teepee
            "table-cell",
            "table_cell"
         @@commander.table_data expressions
+      when "link",
+           "href",
+           "url"
+        @@commander.link expressions
       when "user",
            "user-id",
            "user_id"

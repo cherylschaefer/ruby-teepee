@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # -*- mode: Ruby -*-
 
-# Copyright © 2013-2015, Christopher Mark Gore,
+# Copyright © 2013-2016, Christopher Mark Gore,
 # Soli Deo Gloria,
 # All rights reserved.
 #

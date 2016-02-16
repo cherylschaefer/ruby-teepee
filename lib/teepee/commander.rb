@@ -35,6 +35,8 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+require 'uri'
+
 require 'active_support/all'
 require 'monkey-patch'
 
@@ -45,6 +47,12 @@ include ERB::Util
 
 module Teepee
   class Commander
+    def valid_uri? uri
+      (!! (u = URI.parse(uri))) and not u.scheme.nil?
+    rescue URI::InvalidURIError
+      false
+    end
+
     def command_error message
       %{<span style="color: red">[#{message}]</span>}
     end
@@ -312,6 +320,17 @@ module Teepee
 
     def lgamma n
       ensure_numeric Math::lgamma(n).first
+    end
+
+    def link expressions
+      uri, *desc = expressions
+      uri = html_safe uri.to_s
+      if not valid_uri? uri
+        command_error "Not a valid URI."
+      else
+        desc = [uri] if desc.empty?
+        html_tag :a, desc, {href: uri}
+      end
     end
 
     def link_id id
