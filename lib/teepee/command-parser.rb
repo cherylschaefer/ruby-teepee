@@ -94,8 +94,6 @@ module Teepee
            "strikethrough",
            "strikeout"
         @@commander.del expressions
-      when "i"
-        @@commander.i
       when "italic",
            "textit",
            "it"
@@ -250,6 +248,8 @@ module Teepee
            "bookmark_folder-id",
            "bookmark-folder_id"
         @@commander.bookmarks_folder_id first_word_token
+      when "i" # sqrt(-1), not yet supported
+        @@commander.i
       when "pi"
         @@commander.pi
       when "e"
