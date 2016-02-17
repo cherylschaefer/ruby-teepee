@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # -*- mode: Ruby -*-
 
-# Copyright © 2013-2015, Christopher Mark Gore,
+# Copyright © 2013-2016, Christopher Mark Gore,
 # Soli Deo Gloria,
 # All rights reserved.
 #
@@ -36,6 +36,12 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 require 'teepee/token'
+
+class String
+  def to_html
+    self
+  end
+end
 
 module Teepee
   class StringToken < Token
