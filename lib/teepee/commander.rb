@@ -324,7 +324,7 @@ module Teepee
 
     def link expressions
       uri, *desc = expressions
-      uri = html_safe uri.to_s
+      uri = ERB::Util.html_escape uri.to_s
       if not valid_uri? uri
         command_error "Not a valid URI."
       else
