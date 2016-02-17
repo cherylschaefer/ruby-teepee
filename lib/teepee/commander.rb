@@ -73,7 +73,7 @@ module Teepee
 
     def html_tag tag, expressions, attribs=nil
       opening_tag = if attribs
-                      attribs_string = attribs.map {|k,v| %{"#{k}"="#{v}"}}.join " "
+                      attribs_string = attribs.map {|k,v| %{#{k}="#{v}"}}.join " "
                       "<#{tag} #{attribs_string}>"
                     else
                       "<#{tag}>"
