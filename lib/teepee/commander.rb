@@ -175,7 +175,7 @@ module Teepee
     end
 
     def br
-      "\n</br>\n"
+      "\n<br/>\n"
     end
 
     def cos angle
