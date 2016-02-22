@@ -82,7 +82,7 @@ describe Teepee::Parser do
       .to be_a Teepee::Parser
   end
 
-  describe :to_html do
+  describe "basic parsing tests" do
     it "can correctly parse a single word" do
       expect(parse("Word"))
             .== para("Word")
@@ -106,26 +106,6 @@ describe Teepee::Parser do
     it "can correctly split paragraphs" do
       expect(parse(TWO_PARAGRAPHS_BEFORE))
             .== TWO_PARAGRAPHS_AFTER
-    end
-
-    it "can correctly handle bold" do
-      expect(parse("Soli \\b{Deo} Gloria"))
-            .== para("Soli <b>Deo</b> Gloria")
-    end
-
-    it "can correctly handle italics" do
-      expect(parse("Soli \\it{Deo} Gloria"))
-            .== para("Soli <i>Deo</i> Gloria")
-    end
-
-    it "can correctly handle subscripts" do
-      expect(parse("Soli \\sub{Deo} Gloria"))
-            .== para("Soli <sub>Deo</sub> Gloria")
-    end
-
-    it "can correctly handle superscripts" do
-      expect(parse("Soli \\sup{Deo} Gloria"))
-            .== para("Soli <sup>Deo</sup> Gloria")
     end
 
     it "can correctly handle a command around the entire input" do
@@ -152,66 +132,90 @@ describe Teepee::Parser do
       expect(parse(TWO_LINE_BOLD_BEFORE))
             .== TWO_LINE_BOLD_AFTER
     end
+  end
 
-    describe :addition do
-      it "works with multiple arguments" do
-        expect(parse("\\+{1 2 3 4}"))
-          .== para("10.0")
-      end
-
-      it "works with a single argument" do
-        expect(parse("\\+{123}"))
-          .== para("123.0")
-      end
+  describe "basic formatting" do
+    it "can correctly handle bold" do
+      expect(parse("Soli \\b{Deo} Gloria"))
+            .== para("Soli <b>Deo</b> Gloria")
     end
 
-    describe :subtraction do
-      it "works with multiple arguments" do
-        expect(parse("\\-{10 40}"))
-              .== para("-30.0")
-      end
-
-      it "works with a single argument" do
-        expect(parse("\\-{123}"))
-          .== para("-123.0")
-      end
+    it "can correctly handle italics" do
+      expect(parse("Soli \\it{Deo} Gloria"))
+            .== para("Soli <i>Deo</i> Gloria")
     end
 
-    describe :multiplication do
-      it "works with multiple arguments" do
-        expect(parse("\\*{10 -4.7}"))
-              .== para("-47.0")
-      end
-
-      it "works with a single argument" do
-        expect(parse("\\*{123}").to_html)
-              .== para("123.0")
-      end
+    it "can correctly handle subscripts" do
+      expect(parse("Soli \\sub{Deo} Gloria"))
+            .== para("Soli <sub>Deo</sub> Gloria")
     end
 
-    describe :division do
-      it "works with multiple arguments" do
-        expect(parse("\\/{100 10 2}"))
-              .== para("5.0")
-      end
-
-      it "works with a single argument" do
-        expect(parse("\\/{10}"))
-              .== para("0.1")
-      end
+    it "can correctly handle superscripts" do
+      expect(parse("Soli \\sup{Deo} Gloria"))
+            .== para("Soli <sup>Deo</sup> Gloria")
     end
+  end
 
+  describe "basic mathematics" do
     it "can nest mathematics" do
       expect(parse("\\+{10 \\*{3 5} \\-{\\+{4 5} 2}"))
             .== para("32.0")
     end
+  end
 
-    it "can calculate some trigonometry" do
-      expect(Teepee::Parser.new("\\sin{0}").to_html)
-            .== para("0.0")
-      expect(Teepee::Parser.new("\\cos{\\pi}").to_html)
-            .== para("-1.0")
+  describe :addition do
+    it "works with multiple arguments" do
+      expect(parse("\\+{1 2 3 4}"))
+            .== para("10.0")
     end
+
+    it "works with a single argument" do
+      expect(parse("\\+{123}"))
+            .== para("123.0")
+    end
+  end
+
+  describe :subtraction do
+    it "works with multiple arguments" do
+      expect(parse("\\-{10 40}"))
+            .== para("-30.0")
+    end
+
+    it "works with a single argument" do
+      expect(parse("\\-{123}"))
+            .== para("-123.0")
+    end
+  end
+
+  describe :multiplication do
+    it "works with multiple arguments" do
+      expect(parse("\\*{10 -4.7}"))
+            .== para("-47.0")
+    end
+
+    it "works with a single argument" do
+      expect(parse("\\*{123}").to_html)
+            .== para("123.0")
+    end
+  end
+
+  describe :division do
+    it "works with multiple arguments" do
+      expect(parse("\\/{100 10 2}"))
+            .== para("5.0")
+    end
+
+    it "works with a single argument" do
+      expect(parse("\\/{10}"))
+            .== para("0.1")
+    end
+  end
+
+  it "can calculate some trigonometry" do
+    expect(Teepee::Parser.new("\\sin{0}").to_html)
+          .== para("0.0")
+    expect(Teepee::Parser.new("\\cos{\\pi}").to_html)
+          .== para("-1.0")
   end
 
   describe "degrees->radians" do
