@@ -74,9 +74,17 @@ module Teepee
     def html_tag tag, expressions, attribs=nil
       opening_tag = if attribs
                       attribs_string = attribs.map {|k,v| %{#{k}="#{v}"}}.join " "
-                      "<#{tag} #{attribs_string}>"
+                      if expressions.nil?
+                        "<#{tag} #{attribs_string}/>"
+                      else
+                        "<#{tag} #{attribs_string}>"
+                      end
                     else
-                      "<#{tag}>"
+                      if expressions.nil?
+                        "<#{tag}/>"
+                      else
+                        "<#{tag}>"
+                      end
                     end
       opening_tag + expressions.map(&:to_html).join + "</#{tag}>"
     end
@@ -175,7 +183,7 @@ module Teepee
     end
 
     def br
-      "\n<br/>\n"
+      html_tag :br, nil
     end
 
     def cos angle
