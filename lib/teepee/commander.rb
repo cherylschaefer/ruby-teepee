@@ -370,7 +370,7 @@ module Teepee
     def log base, number
       if number.nil?
         number, base = base, number
-        ensure_numeric Math.log number # default to natural logarithm
+        ensure_numeric Math.log10 number # default to log base 10
       else
         ensure_numeric Math.log number, base
       end
