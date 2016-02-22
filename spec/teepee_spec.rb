@@ -211,11 +211,48 @@ describe Teepee::Parser do
     end
   end
 
-  it "can calculate some trigonometry" do
-    expect(Teepee::Parser.new("\\sin{0}").to_html)
-          .== para("0.0")
-    expect(Teepee::Parser.new("\\cos{\\pi}").to_html)
-          .== para("-1.0")
+  describe :trigonometry do
+    describe :sin do
+      it "basic test" do
+        expect(parse("\\sin{0}"))
+              .== para("0.0")
+      end
+    end
+
+    describe :cosine do
+      it "basic test" do
+        expect(parse("\\cos{\\pi}"))
+              .== para("-1.0")
+      end
+    end
+
+    describe :tangent do
+      it "basic test" do
+        expect(parse("\\tan{0}"))
+              .== para("0.0")
+      end
+    end
+
+    describe :asin do
+      it "basic test" do
+        expect(parse("\\asin{0}"))
+              .== para("0.0")
+      end
+    end
+
+    describe :acos do
+      it "basic test" do
+        expect(parse("\\acos{1}"))
+              .== para("0.0")
+      end
+    end
+
+    describe :atang do
+      it "basic test" do
+        expect(parse("\\atan{0}"))
+              .== para("0.0")
+      end
+    end
   end
 
   describe "degrees->radians" do
