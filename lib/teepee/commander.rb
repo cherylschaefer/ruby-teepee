@@ -282,6 +282,20 @@ module Teepee
       command_error "Complex numbers are not yet supported."
     end
 
+    def image expressions
+      uri, *alt_text = expressions
+      uri = ERB::Util.html_escape uri.to_s
+      if not valid_uri? uri
+        command_error "Not a valid URI for the image."
+      else
+        if alt_text.empty?
+          html_tag :img, desc, {src: uri}
+        else
+          html_tag :img, desc, {src: uri, alt: alt_text}
+        end
+      end
+    end
+
     def it expressions
       html_tag :i, expressions
     end

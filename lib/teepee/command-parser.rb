@@ -224,6 +224,9 @@ module Teepee
            "href",
            "url"
         @@commander.link expressions
+      when "img",
+           "image"
+        @@commander.image expressions
       when "user",
            "user-id",
            "user_id"
