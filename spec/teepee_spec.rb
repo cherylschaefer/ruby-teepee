@@ -207,6 +207,24 @@ end
     end
   end
 
+  describe "mathematical constants" do
+    describe :pi do
+      it "exists" do
+        expect(parse("\\pi"))
+              .== para(Math::PI.to_s)
+      end
+    end
+
+    describe :e do
+      it "exists" do
+        expect(parse("\\e"))
+              .== para(Math::E.to_s)
+      end
+    end
+
+    describe :i
+  end
+
   describe :addition do
     it "works with multiple arguments" do
       expect(parse("\\+{1 2 3 4}"))
@@ -249,7 +267,7 @@ end
             .== para("5.0")
     end
 
-    it "works with a single argument" do
+    it "works with a single argument, calculating the inverse" do
       expect(parse("\\/{10}"))
             .== para("0.1")
     end
