@@ -156,6 +156,50 @@ describe Teepee::Parser do
     end
   end
 
+  describe :headers do
+    describe :h1 do
+      it "basic test" do
+        expect(parse("\\h1{Soli Deo Gloria}"))
+              .== para("<h1>Soli Deo Gloria</h1>")
+      end
+    end
+
+    describe :h2 do
+      it "basic test" do
+        expect(parse("\\h2{Soli Deo Gloria}"))
+              .== para("<h2>Soli Deo Gloria</h2>")
+      end
+    end
+
+    describe :h3 do
+      it "basic test" do
+        expect(parse("\\h3{Soli Deo Gloria}"))
+              .== para("<h3>Soli Deo Gloria</h3>")
+      end
+    end
+
+    describe :h4 do
+      it "basic test" do
+        expect(parse("\\h4{Soli Deo Gloria}"))
+              .== para("<h4>Soli Deo Gloria</h4>")
+      end
+    end
+
+    describe :h5 do
+      it "basic test" do
+        expect(parse("\\h5{Soli Deo Gloria}"))
+              .== para("<h5>Soli Deo Gloria</h5>")
+      end
+    end
+
+    describe :h6 do
+      it "basic test" do
+        expect(parse("\\h6{Soli Deo Gloria}"))
+              .== para("<h6>Soli Deo Gloria</h6>")
+      end
+    end
+end
+
   describe "basic mathematics" do
     it "can nest mathematics" do
       expect(parse("\\+{10 \\*{3 5} \\-{\\+{4 5} 2}"))
