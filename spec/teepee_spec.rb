@@ -349,4 +349,28 @@ end
         .== para("<a href=\"http://thinkingbicycle.com/links/123/\">Link #123</a>")
     end
   end
+
+  describe :link do
+    it "works with just a bare URL" do
+      expect(parse("\\link{http://www.cgore.com}"))
+            .== para("<a href=\"http://www.cgore.com\">http://www.cgore.com</a>")
+    end
+
+    it "works with a URL and a keyword" do
+      expect(parse("\\link{http://www.cgore.com cgore.com}"))
+            .== para("<a href=\"http://www.cgore.com\">cgore</a>")
+    end
+
+    it "works with a URL and a multi-word keywords" do
+      expect(parse("\\link{http://www.cgore.com Chris Gore}"))
+            .== para("<a href=\"http://www.cgore.com\">Chris Gore</a>")
+    end
+
+    it "doesn't get confused by too much whitespace" do
+      expect(parse("\\link{http://www.cgore.com    }"))
+            .== para("<a href=\"http://www.cgore.com\">http://www.cgore.com</a>")
+      expect(parse("\\link{    http://www.cgore.com}"))
+            .== para("<a href=\"http://www.cgore.com\">http://www.cgore.com</a>")
+    end
+  end
 end
