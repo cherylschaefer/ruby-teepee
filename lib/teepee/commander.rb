@@ -289,9 +289,9 @@ module Teepee
         command_error "Not a valid URI for the image."
       else
         if alt_text.empty?
-          html_tag :img, desc, {src: uri}
+          html_tag :img, nil, {src: uri}
         else
-          html_tag :img, desc, {src: uri, alt: alt_text}
+          html_tag :img, nil, {src: uri, alt: alt_text}
         end
       end
     end
