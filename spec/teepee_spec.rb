@@ -377,7 +377,19 @@ end
   describe :image do
     it "works for a bare URL" do
       expect(parse("\\image{http://www.cgore.com/monsters.jpeg}"))
-            .== para("<img src=\"http://www.cgore.com/monsters.jpeg\"/>")
+            .== para("<img src=\"http://www.cgore.com/monster.jpeg\"/>")
+    end
+
+    it "works for a URL with alt text specified" do
+      expect(parse("\\image{http://www.cgore.com/monsters.jpeg Scary Monsters}"))
+            .== para("<img src=\"http://www.cgore.com/monster.jpeg\"/>")
+    end
+
+    it "doesn't get confused by too much whitespace" do
+      expect(parse("\\image{http://www.cgore.com/monsters.jpeg    }"))
+            .== para("<img src=\"http://www.cgore.com/monster.jpeg\"/>")
+      expect(parse("\\image{    http://www.cgore.com/monsters.jpeg}"))
+            .== para("<img src=\"http://www.cgore.com/monster.jpeg\"/>")
     end
   end
 end
