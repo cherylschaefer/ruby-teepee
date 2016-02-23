@@ -373,4 +373,11 @@ end
             .== para("<a href=\"http://www.cgore.com\">http://www.cgore.com</a>")
     end
   end
+
+  describe :image do
+    it "works for a bare URL" do
+      expect(parse("\\image{http://www.cgore.com/monsters.jpeg}"))
+            .== para("<img src=\"http://www.cgore.com/monsters.jpeg\"/>")
+    end
+  end
 end
