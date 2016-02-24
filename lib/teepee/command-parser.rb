@@ -84,6 +84,10 @@ module Teepee
            "closingbrace",
            "cbrace"
         @@commander.right_brace
+      when "_"
+        @@commander.nbsp
+      when "space"
+        @@commander.space
       when "br", "newline"
         @@commander.br
       when "bold", "b", "textbf"

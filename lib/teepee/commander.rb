@@ -380,9 +380,12 @@ module Teepee
       ensure_numeric Math.log10 number
     end
 
+    def nbsp
+      "&nbsp;"
+    end
+
     def note_id id
       id_command_handler id, :Note
-    end
 
     def pi
       Math::PI
@@ -410,6 +413,10 @@ module Teepee
 
     def sqrt number
       ensure_numeric Math.sqrt number
+    end
+
+    def space
+      " "
     end
 
     def sub expressions
