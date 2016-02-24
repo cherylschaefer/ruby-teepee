@@ -237,6 +237,9 @@ module Teepee
       when "keyword-id",
            "keyword_id"
         @@commander.keyword_id first_word_token
+      when "note-id",
+           "note_id"
+        @@commander.note_id first_word_token
       when "tag-id",
            "tag_id"
         @@commander.tag_id first_word_token

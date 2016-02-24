@@ -343,10 +343,19 @@ end
     end
   end
 
-  describe :link_id do
-    it "builds out a href to a ThinkingBicycle Link" do
-      expect(parse("\\link-id{123}"))
-        .== para("<a href=\"http://thinkingbicycle.com/links/123/\">Link #123</a>")
+  describe "ID commands" do
+    describe :link_id do
+      it "builds out a href to a ThinkingBicycle Link" do
+        expect(parse("\\link-id{123}"))
+              .== para("<a href=\"http://thinkingbicycle.com/links/123/\">Link #123</a>")
+      end
+    end
+
+    describe :note_id do
+      it "builds out a href to a ThinkingBicycle Note" do
+        expect(parse("\\note-id{123}"))
+              .== para("<a href=\"http://thinkingbicycle.com/notes/123/\">Note #123</a>")
+      end
     end
   end
 

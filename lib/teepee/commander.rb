@@ -380,6 +380,10 @@ module Teepee
       ensure_numeric Math.log10 number
     end
 
+    def note_id id
+      id_command_handler id, :Note
+    end
+
     def pi
       Math::PI
     end
