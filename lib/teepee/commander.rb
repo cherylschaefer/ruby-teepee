@@ -386,6 +386,7 @@ module Teepee
 
     def note_id id
       id_command_handler id, :Note
+    end
 
     def pi
       Math::PI
