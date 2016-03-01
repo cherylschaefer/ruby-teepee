@@ -300,6 +300,12 @@ end
           .== para("-240.0")
       end
     end
+
+    describe "%t" do
+      it "returns the percentage of the total" do
+        expect(parse("\\%t{100 10}")).to eq(para("10.0"))
+      end
+    end
   end
 
   describe :trigonometry do

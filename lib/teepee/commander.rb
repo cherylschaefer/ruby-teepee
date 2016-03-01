@@ -157,6 +157,11 @@ module Teepee
       numbers.inject {|base, percent| base * (1-percent/100.0) }
     end
 
+    def percent_total *numbers
+      ensure_numeric numbers
+      numbers.inject {|total, part| Float(part)/Float(total)*100.0 }
+    end
+
     def acos number
       ensure_numeric Math.acos number
     end
