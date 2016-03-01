@@ -108,7 +108,7 @@ module Teepee
       elsif not id.to_s =~ /\A[0-9]+\z/
         command_error "#{singular}_id: error: invalid #{singular} ID specified"
       else
-        tb_href "/#{plural}/#{id.to_s}/#{view}", "#{klass.to_s} ##{id.to_s}"
+        tb_href "#{plural}/#{id.to_s}/#{view}", "#{klass.to_s} ##{id.to_s}"
       end
     end
 
