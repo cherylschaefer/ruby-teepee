@@ -89,7 +89,7 @@ module Teepee
       if expressions.nil?
         opening_tag
       else
-        opening_tag + expressions.map(&:to_html).join + "</#{tag}>"
+        opening_tag + expressions.map(&:to_html).join.strip + "</#{tag}>"
       end
     end
 
