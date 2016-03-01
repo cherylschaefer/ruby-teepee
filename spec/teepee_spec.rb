@@ -273,6 +273,15 @@ end
     end
   end
 
+  describe :percentages do
+    it "calculates percentages" do
+      expect(parse("\\%{120 12}"))
+        .== para("14.4")
+      expect(parse("\\%{100 10}"))
+        .== para("10.0")
+    end
+  end
+
   describe :trigonometry do
     describe :sin do
       it "basic test" do
@@ -309,7 +318,7 @@ end
       end
     end
 
-    describe :atang do
+    describe :atan do
       it "basic test" do
         expect(parse("\\atan{0}"))
               .== para("0.0")

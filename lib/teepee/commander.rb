@@ -142,6 +142,14 @@ module Teepee
       ensure_numeric numbers.reduce :**
     end
 
+    def % *numbers
+      ensure_numeric numbers
+      def percentage(base, percent)
+        base*percent/100.0
+      end
+      numbers.reduce :percentage
+    end
+
     def acos number
       ensure_numeric Math.acos number
     end
