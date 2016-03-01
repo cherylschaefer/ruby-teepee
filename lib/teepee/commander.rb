@@ -275,7 +275,7 @@ module Teepee
     end
 
     def h2 expressions
-      html_tag :h2gg, expressions
+      html_tag :h2, expressions
     end
 
     def h3 expressions

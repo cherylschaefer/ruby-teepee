@@ -85,74 +85,74 @@ describe Teepee::Parser do
   describe "basic parsing tests" do
     it "can correctly parse a single word" do
       expect(parse("Word"))
-            .== para("Word")
+        .to eq(para("Word"))
     end
 
     it "can correctly parse a single non-english word" do
       expect(parse("Λόγος"))
-            .== para("Λόγος")
+        .to eq(para("Λόγος"))
     end
 
     it "escapes < and >" do
       expect(parse("<b>not bold</b>"))
-            .== para("&lt;b&gt;not bold&lt;/b&gt;")
+        .to eq(para("&lt;b&gt;not bold&lt;/b&gt;"))
     end
 
     it "escapes &" do
       expect(parse("not &lt; less-than"))
-            .== para("not &amp;lt; less-than")
+        .to eq(para("not &amp;lt; less-than"))
     end
 
     it "can correctly split paragraphs" do
       expect(parse(TWO_PARAGRAPHS_BEFORE))
-            .== TWO_PARAGRAPHS_AFTER
+            .to eq(TWO_PARAGRAPHS_AFTER)
     end
 
     it "can correctly handle a command around the entire input" do
       expect(parse("\\b{Soli Deo Gloria}"))
-            .== para("<b>Soli Deo Gloria</b>")
+        .to eq(para("<b>Soli Deo Gloria</b>"))
     end
 
     it "can correctly handle two commands in a row" do
       expect(parse("Soli \\b{Deo} \\it{Gloria}"))
-            .== para("Soli <b>Deo</b> <i>Gloria</i>")
+        .to eq(para("Soli <b>Deo</b> <i>Gloria</i>"))
     end
 
     it "can correctly handle nested commands" do
       expect(parse("Soli \\b{\\it{Deo}} Gloria"))
-            .== para("Soli <b><i>Deo</i></b> Gloria")
+        .to eq(para("Soli <b><i>Deo</i></b> Gloria"))
     end
 
     it "can correctly handle three-deep nested commands" do
       expect(parse("Soli \\sup{\\b{\\it{Deo}}} Gloria"))
-            .== para("Soli <sup><b><i>Deo</i></b></sup> Gloria")
+        .to eq(para("Soli <sup><b><i>Deo</i></b></sup> Gloria"))
     end
 
     it "can correctly handle commands split over multiple lines" do
       expect(parse(TWO_LINE_BOLD_BEFORE))
-            .== TWO_LINE_BOLD_AFTER
+        .to eq(TWO_LINE_BOLD_AFTER)
     end
   end
 
   describe "basic formatting" do
     it "can correctly handle bold" do
       expect(parse("Soli \\b{Deo} Gloria"))
-            .== para("Soli <b>Deo</b> Gloria")
+        .to eq(para("Soli <b>Deo</b> Gloria"))
     end
 
     it "can correctly handle italics" do
       expect(parse("Soli \\it{Deo} Gloria"))
-            .== para("Soli <i>Deo</i> Gloria")
+        .to eq(para("Soli <i>Deo</i> Gloria"))
     end
 
     it "can correctly handle subscripts" do
       expect(parse("Soli \\sub{Deo} Gloria"))
-            .== para("Soli <sub>Deo</sub> Gloria")
+        .to eq(para("Soli <sub>Deo</sub> Gloria"))
     end
 
     it "can correctly handle superscripts" do
       expect(parse("Soli \\sup{Deo} Gloria"))
-            .== para("Soli <sup>Deo</sup> Gloria")
+        .to eq(para("Soli <sup>Deo</sup> Gloria"))
     end
   end
 
@@ -160,42 +160,42 @@ describe Teepee::Parser do
     describe :h1 do
       it "basic test" do
         expect(parse("\\h1{Soli Deo Gloria}"))
-              .== para("<h1>Soli Deo Gloria</h1>")
+          .to eq(para("<h1>Soli Deo Gloria</h1>"))
       end
     end
 
     describe :h2 do
       it "basic test" do
         expect(parse("\\h2{Soli Deo Gloria}"))
-              .== para("<h2>Soli Deo Gloria</h2>")
+          .to eq(para("<h2>Soli Deo Gloria</h2>"))
       end
     end
 
     describe :h3 do
       it "basic test" do
         expect(parse("\\h3{Soli Deo Gloria}"))
-              .== para("<h3>Soli Deo Gloria</h3>")
+          .to eq(para("<h3>Soli Deo Gloria</h3>"))
       end
     end
 
     describe :h4 do
       it "basic test" do
         expect(parse("\\h4{Soli Deo Gloria}"))
-              .== para("<h4>Soli Deo Gloria</h4>")
+          .to eq(para("<h4>Soli Deo Gloria</h4>"))
       end
     end
 
     describe :h5 do
       it "basic test" do
         expect(parse("\\h5{Soli Deo Gloria}"))
-              .== para("<h5>Soli Deo Gloria</h5>")
+          .to eq(para("<h5>Soli Deo Gloria</h5>"))
       end
     end
 
     describe :h6 do
       it "basic test" do
         expect(parse("\\h6{Soli Deo Gloria}"))
-              .== para("<h6>Soli Deo Gloria</h6>")
+          .to eq(para("<h6>Soli Deo Gloria</h6>"))
       end
     end
 end
@@ -203,7 +203,7 @@ end
   describe "basic mathematics" do
     it "can nest mathematics" do
       expect(parse("\\+{10 \\*{3 5} \\-{\\+{4 5} 2}"))
-            .== para("32.0")
+        .to eq(para("32.0"))
     end
   end
 
@@ -277,33 +277,34 @@ end
     describe :% do
       it "calculates percentages" do
         expect(parse("\\%{120 12}"))
-              .== para("14.4")
+              .to eq(para("14.4"))
         expect(parse("\\%{100 10}"))
-              .== para("10.0")
+              .to eq(para("10.0"))
       end
     end
 
     describe "+%" do
       it "adds a percentage" do
         expect(parse("\\+%{120 12}"))
-          .== para("134.4")
+          .to eq(para("134.4"))
         expect(parse("\\+%{120 200}"))
-          .== para("360.0")
+          .to eq(para("360.0"))
       end
     end
 
     describe "-%" do
       it "subtracts a percentage" do
         expect(parse("\\-%{120 12}"))
-          .== para("105.6")
-        expect(parse("\\+%{120 200}"))
-          .== para("-240.0")
+          .to eq(para("105.6"))
+        expect(parse("\\-%{120 200}"))
+          .to eq(para("-120.0"))
       end
     end
 
     describe "%t" do
       it "returns the percentage of the total" do
-        expect(parse("\\%t{100 10}")).to eq(para("10.0"))
+        expect(parse("\\%t{100 10}"))
+          .to eq(para("10.0"))
       end
     end
   end
