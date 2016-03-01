@@ -138,10 +138,6 @@ module Teepee
       end
     end
 
-    def % *numbers
-      ensure_numeric numbers.reduce :%
-    end
-
     def ** *numbers
       ensure_numeric numbers.reduce :**
     end
@@ -378,6 +374,10 @@ module Teepee
 
     def log10 number
       ensure_numeric Math.log10 number
+    end
+
+    def mod *numbers
+      ensure_numeric numbers.reduce :%
     end
 
     def nbsp

@@ -276,8 +276,10 @@ module Teepee
         @@commander.* *numbers_from_expressions
       when "/"
         @@commander./ *numbers_from_expressions
-      when "%"
-        @@commander.% *numbers_from_expressions
+      when "mod",
+           "modulus",
+           "modulo"
+        @@commander.mod *numbers_from_expressions
       when "^", "**"
         @@commander.** *numbers_from_expressions
       when "sin", "cos", "tan",
