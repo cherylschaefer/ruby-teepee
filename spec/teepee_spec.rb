@@ -274,11 +274,31 @@ end
   end
 
   describe :percentages do
-    it "calculates percentages" do
-      expect(parse("\\%{120 12}"))
-        .== para("14.4")
-      expect(parse("\\%{100 10}"))
-        .== para("10.0")
+    describe :% do
+      it "calculates percentages" do
+        expect(parse("\\%{120 12}"))
+              .== para("14.4")
+        expect(parse("\\%{100 10}"))
+              .== para("10.0")
+      end
+    end
+
+    describe "+%" do
+      it "adds a percentage" do
+        expect(parse("\\+%{120 12}"))
+          .== para("134.4")
+        expect(parse("\\+%{120 200}"))
+          .== para("360.0")
+      end
+    end
+
+    describe "-%" do
+      it "subtracts a percentage" do
+        expect(parse("\\-%{120 12}"))
+          .== para("105.6")
+        expect(parse("\\+%{120 200}"))
+          .== para("-240.0")
+      end
     end
   end
 

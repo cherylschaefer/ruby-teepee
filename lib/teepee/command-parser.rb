@@ -276,6 +276,12 @@ module Teepee
         @@commander.* *numbers_from_expressions
       when "/"
         @@commander./ *numbers_from_expressions
+      when "%"
+        @@commander.% *numbers_from_expressions
+      when "+%"
+        @@commander.add_percentage *numbers_from_expressions
+      when "-%"
+        @@commander.subtract_percentage *numbers_from_expressions
       when "mod",
            "modulus",
            "modulo"

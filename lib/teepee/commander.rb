@@ -144,10 +144,17 @@ module Teepee
 
     def % *numbers
       ensure_numeric numbers
-      def percentage(base, percent)
-        base*percent/100.0
-      end
-      numbers.reduce :percentage
+      numbers.inject { |base, percent| base*percent/100.0 }
+    end
+
+    def add_percentage *numbers
+      ensure_numeric numbers
+      numbers.inject {|base, percent| base * (1+percent/100.0) }
+    end
+
+    def subtract_percentage *numbers
+      ensure_numeric numbers
+      numbers.inject {|base, percent| base * (1-percent/100.0) }
     end
 
     def acos number
