@@ -211,14 +211,14 @@ end
     describe :pi do
       it "exists" do
         expect(parse("\\pi"))
-              .== para(Math::PI.to_s)
+          .to eq(para(Math::PI.to_s))
       end
     end
 
     describe :e do
       it "exists" do
         expect(parse("\\e"))
-              .== para(Math::E.to_s)
+          .to eq(para(Math::E.to_s))
       end
     end
 
@@ -228,48 +228,48 @@ end
   describe :addition do
     it "works with multiple arguments" do
       expect(parse("\\+{1 2 3 4}"))
-            .== para("10.0")
+        .to eq(para("10.0"))
     end
 
     it "works with a single argument" do
       expect(parse("\\+{123}"))
-            .== para("123.0")
+        .to eq(para("123.0"))
     end
   end
 
   describe :subtraction do
     it "works with multiple arguments" do
       expect(parse("\\-{10 40}"))
-            .== para("-30.0")
+        .to eq(para("-30.0"))
     end
 
     it "works with a single argument" do
       expect(parse("\\-{123}"))
-            .== para("-123.0")
+        .to eq(para("-123.0"))
     end
   end
 
   describe :multiplication do
     it "works with multiple arguments" do
       expect(parse("\\*{10 -4.7}"))
-            .== para("-47.0")
+        .to eq(para("-47.0"))
     end
 
     it "works with a single argument" do
       expect(parse("\\*{123}").to_html)
-            .== para("123.0")
+        .to eq(para("123.0"))
     end
   end
 
   describe :division do
     it "works with multiple arguments" do
       expect(parse("\\/{100 10 2}"))
-            .== para("5.0")
+        .to eq(para("5.0"))
     end
 
     it "works with a single argument, calculating the inverse" do
       expect(parse("\\/{10}"))
-            .== para("0.1")
+        .to eq(para("0.1"))
     end
   end
 
@@ -277,9 +277,9 @@ end
     describe :% do
       it "calculates percentages" do
         expect(parse("\\%{120 12}"))
-              .to eq(para("14.4"))
+          .to eq(para("14.4"))
         expect(parse("\\%{100 10}"))
-              .to eq(para("10.0"))
+          .to eq(para("10.0"))
       end
     end
 
@@ -320,21 +320,21 @@ end
     describe :cosine do
       it "basic test" do
         expect(parse("\\cos{\\pi}"))
-              .== para("-1.0")
+          .to eq(para("-1.0"))
       end
     end
 
     describe :tangent do
       it "basic test" do
         expect(parse("\\tan{0}"))
-              .== para("0.0")
+          .to eq(para("0.0"))
       end
     end
 
     describe :asin do
       it "basic test" do
         expect(parse("\\asin{0}"))
-              .== para("0.0")
+          .to eq(para("0.0"))
       end
     end
 
@@ -348,7 +348,7 @@ end
     describe :atan do
       it "basic test" do
         expect(parse("\\atan{0}"))
-              .== para("0.0")
+          .to eq(para("0.0"))
       end
     end
   end
@@ -356,26 +356,26 @@ end
   describe "degrees->radians" do
     it "converts degrees to radians" do
       expect(parse("\\d2r{0}"))
-            .== para("0.0")
+        .to eq(para("0.0"))
       expect(parse("\\deg->rad{0}"))
-            .== para("0.0")
+        .to eq(para("0.0"))
       expect(parse("\\degrees->radians{0}"))
-            .== para("0.0")
+        .to eq(para("0.0"))
       expect(parse("\\d2r{180.0}"))
-            .== para(Math::PI.to_s)
+        .to eq(para(Math::PI.to_s))
     end
   end
 
   describe "radians->degrees" do
     it "converts radians to degrees" do
       expect(parse("\\r2d{0}"))
-            .== para("0.0")
+        .to eq(para("0.0"))
       expect(parse("\\rad->deg{0}"))
-            .== para("0.0")
+        .to eq(para("0.0"))
       expect(parse("\\radians->degrees{0}"))
-            .== para("0.0")
+        .to eq(para("0.0"))
       expect(parse("\\r2d{"+Math::PI.to_s+"}"))
-            .== para("180.0")
+        .to eq(para("180.0"))
     end
   end
 
