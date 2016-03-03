@@ -383,14 +383,14 @@ end
     describe :link_id do
       it "builds out a href to a ThinkingBicycle Link" do
         expect(parse("\\link-id{123}"))
-              .== para("<a href=\"http://thinkingbicycle.com/links/123/\">Link #123</a>")
+          .to eq(para("<a href=\"http://thinkingbicycle.com/links/123/\">Link #123</a>"))
       end
     end
 
     describe :note_id do
       it "builds out a href to a ThinkingBicycle Note" do
         expect(parse("\\note-id{123}"))
-              .== para("<a href=\"http://thinkingbicycle.com/notes/123/\">Note #123</a>")
+          .to eq(para("<a href=\"http://thinkingbicycle.com/notes/123/\">Note #123</a>"))
       end
     end
   end
@@ -398,43 +398,43 @@ end
   describe :link do
     it "works with just a bare URL" do
       expect(parse("\\link{http://www.cgore.com}"))
-            .== para("<a href=\"http://www.cgore.com\">http://www.cgore.com</a>")
+        .to eq(para("<a href=\"http://www.cgore.com\">http://www.cgore.com</a>"))
     end
 
     it "works with a URL and a keyword" do
-      expect(parse("\\link{http://www.cgore.com cgore.com}"))
-            .== para("<a href=\"http://www.cgore.com\">cgore</a>")
+      expect(parse("\\link{http://www.cgore.com cgore dot com}"))
+        .to eq(para("<a href=\"http://www.cgore.com\">cgore dot com</a>"))
     end
 
     it "works with a URL and a multi-word keywords" do
       expect(parse("\\link{http://www.cgore.com Chris Gore}"))
-            .== para("<a href=\"http://www.cgore.com\">Chris Gore</a>")
+        .to eq(para("<a href=\"http://www.cgore.com\">Chris Gore</a>"))
     end
 
     it "doesn't get confused by too much whitespace" do
       expect(parse("\\link{http://www.cgore.com    }"))
-            .== para("<a href=\"http://www.cgore.com\">http://www.cgore.com</a>")
+        .to eq(para("<a href=\"http://www.cgore.com\">http://www.cgore.com</a>"))
       expect(parse("\\link{    http://www.cgore.com}"))
-            .== para("<a href=\"http://www.cgore.com\">http://www.cgore.com</a>")
+        .to eq(para("<a href=\"http://www.cgore.com\">http://www.cgore.com</a>"))
     end
   end
 
   describe :image do
     it "works for a bare URL" do
-      expect(parse("\\image{http://www.cgore.com/monsters.jpeg}"))
-            .== para("<img src=\"http://www.cgore.com/monster.jpeg\"/>")
+      expect(parse("\\image{http://www.cgore.com/monster.jpeg}"))
+        .to eq(para("<img src=\"http://www.cgore.com/monster.jpeg\"/>"))
     end
 
     it "works for a URL with alt text specified" do
-      expect(parse("\\image{http://www.cgore.com/monsters.jpeg Scary Monsters}"))
-            .== para("<img src=\"http://www.cgore.com/monster.jpeg\"/>")
+      expect(parse("\\image{http://www.cgore.com/monster.jpeg Scary Monsters}"))
+        .to eq(para("<img src=\"http://www.cgore.com/monster.jpeg\" alt=\"Scary Monsters\"/>"))
     end
 
     it "doesn't get confused by too much whitespace" do
-      expect(parse("\\image{http://www.cgore.com/monsters.jpeg    }"))
-            .== para("<img src=\"http://www.cgore.com/monster.jpeg\"/>")
-      expect(parse("\\image{    http://www.cgore.com/monsters.jpeg}"))
-            .== para("<img src=\"http://www.cgore.com/monster.jpeg\"/>")
+      expect(parse("\\image{http://www.cgore.com/monster.jpeg    }"))
+        .to eq(para("<img src=\"http://www.cgore.com/monster.jpeg\"/>"))
+      expect(parse("\\image{    http://www.cgore.com/monster.jpeg}"))
+        .to eq(para("<img src=\"http://www.cgore.com/monster.jpeg\"/>"))
     end
   end
 end

@@ -112,6 +112,24 @@ module Teepee
       end
     end
 
+    def left_strip expressions
+      while expressions.first.kind_of? WhitespaceToken
+        expressions.shift
+      end
+      expressions
+    end
+
+    def right_strip expressions
+      while expressions.last.kind_of? WhitespaceToken
+        expressions.pop
+      end
+      expressions
+    end
+
+    def strip expressions
+      left_strip right_strip expressions
+    end
+
     #----------------------------------------------------------------------------
 
     def + *numbers
@@ -299,6 +317,7 @@ module Teepee
     end
 
     def image expressions
+      expressions = strip expressions
       uri, *alt_text = expressions
       uri = ERB::Util.html_escape uri.to_s
       if not valid_uri? uri
@@ -307,7 +326,7 @@ module Teepee
         if alt_text.empty?
           html_tag :img, nil, {src: uri}
         else
-          html_tag :img, nil, {src: uri, alt: alt_text}
+          html_tag :img, nil, {src: uri, alt: alt_text.map(&:to_s).join.strip}
         end
       end
     end
@@ -365,6 +384,7 @@ module Teepee
     end
 
     def link expressions
+      expressions = strip expressions
       uri, *desc = expressions
       uri = ERB::Util.html_escape uri.to_s
       if not valid_uri? uri
