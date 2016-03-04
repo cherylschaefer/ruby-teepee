@@ -437,4 +437,88 @@ end
         .to eq(para("<img src=\"http://www.cgore.com/monster.jpeg\"/>"))
     end
   end
+
+  describe :booleans do
+    describe :true do
+      it "returns the true constant" do
+        expect(parse("\\true"))
+          .to eq(para("true"))
+      end
+    end
+
+    describe :false do
+      it "returns the false constant" do
+        expect(parse("\\false"))
+          .to eq(para("false"))
+      end
+    end
+
+    describe :boolean_and do
+      it "returns true for no arguments" do
+        expect(parse("\\and{}"))
+          .to eq(para("true"))
+      end
+
+      it "returns true for just true" do
+        expect(parse("\\and{true}"))
+          .to eq(para("true"))
+      end
+
+      it "returns false for just false" do
+        expect(parse("\\and{false}"))
+          .to eq(para("false"))
+      end
+
+      it "two-argument tests" do
+        expect(parse("\\and{true true}"))
+          .to eq(para("true"))
+        expect(parse("\\and{true false}"))
+          .to eq(para("false"))
+        expect(parse("\\and{false true}"))
+          .to eq(para("false"))
+        expect(parse("\\and{false false}"))
+          .to eq(para("false"))
+      end
+    end
+
+    describe :boolean_or do
+      it "returns false for no arguments" do
+        expect(parse("\\or{}"))
+          .to eq(para("false"))
+      end
+
+      it "returns true for just true" do
+        expect(parse("\\and{true}"))
+          .to eq(para("true"))
+      end
+
+      it "returns false for just false" do
+        expect(parse("\\and{false}"))
+          .to eq(para("false"))
+      end
+
+      it "two-argument tests" do
+        expect(parse("\\or{true true}"))
+          .to eq(para("true"))
+        expect(parse("\\or{true false}"))
+          .to eq(para("true"))
+        expect(parse("\\or{false true}"))
+          .to eq(para("true"))
+        expect(parse("\\or{false false}"))
+          .to eq(para("false"))
+      end
+    end
+
+    describe :boolean_not do
+      it "returns false for true" do
+        expect(parse("\\not{true}"))
+          .to eq(para("false"))
+      end
+
+      it "returns true for false" do
+        expect(parse("\\not{false}"))
+          .to eq(para("true"))
+      end
+    end
+  end
 end

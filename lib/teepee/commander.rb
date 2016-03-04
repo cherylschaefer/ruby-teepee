@@ -71,6 +71,14 @@ module Teepee
       end
     end
 
+    def ensure_boolean boolean
+      if boolean.to_s == "true" or boolean.to_s == "false"
+        boolean
+      else
+        command_error "Non-boolean value."
+      end
+    end
+
     def html_tag tag, expressions, attribs=nil
       opening_tag = if attribs
                       attribs_string = attribs.map {|k,v| %{#{k}="#{v}"}}.join " "
@@ -220,6 +228,40 @@ module Teepee
       id_command_handler id, :Folder, "folder", "folders", "folders/bookmarks_inline", "bookmarks"
     end
 
+    def boolean_and expressions
+      if expressions.empty?
+        "true"
+      elsif expressions.first.to_s == "false"
+        "false"
+      elsif expressions.first.to_s == "true" or expressions.first.kind_of? WhitespaceToken
+        boolean_and expressions[1..-1]
+      else
+        command_error "Not a boolean value #{expressions.first}"
+      end
+    end
+
+    def boolean_not expression
+      if expression.to_s == "true"
+        "false"
+      elsif expression.to_s == "false"
+        "true"
+      else
+        command_error "Not a boolean value"
+      end
+    end
+
+    def boolean_or expressions
+      if expressions.empty?
+        "false"
+      elsif expressions.first.to_s == "true"
+        "true"
+      elsif expressions.first.to_s == "false" or expressions.first.kind_of? WhitespaceToken
+        boolean_or expressions[1..-1]
+      else
+        command_error "Not a boolean value"
+      end
+    end
+
     def br
       html_tag :br, nil
     end
@@ -274,6 +316,10 @@ module Teepee
 
     def erfc number
       ensure_numeric Math.erfc number
+    end
+
+    def false_constant
+      "false"
     end
 
     def folder_id id
@@ -494,6 +540,10 @@ module Teepee
 
     def tanh number
       ensure_numeric Math.tanh number
+    end
+
+    def true_constant
+      "true"
     end
 
     def tt expressions

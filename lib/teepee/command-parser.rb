@@ -321,6 +321,16 @@ module Teepee
         @@commander.ldexp fraction, exponent
       when "hypot"
         @@commander.hypot numbers_from_expressions
+      when "true"
+        @@commander.true_constant
+      when "false"
+        @@commander.false_constant
+      when "not"
+        @@commander.boolean_not first_word_token
+      when "and"
+        @@commander.boolean_and expressions
+      when "or"
+        @@commander.boolean_or expressions
       else
         command_error "unknown command #{command.to_html}"
       end
