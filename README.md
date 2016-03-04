@@ -6,3 +6,5 @@
 Teepee is a markup language, a weird cross between TeX and Lisp, still in early development.
 
 The user-level documentation for Teepee [can be found here](http://thinkingbicycle.com/help/teepee).
+
+A quick-start guide for Teepee [is here](http://thinkingbicycle.com/notes/2).
