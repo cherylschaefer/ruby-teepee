@@ -493,6 +493,34 @@ end
       end
     end
 
+    describe :boolean_nand do
+      it "returns false for no arguments" do
+        expect(parse("\\nand{}"))
+          .to eq(para("false"))
+      end
+
+      it "returns false for just true" do
+        expect(parse("\\nand{true}"))
+          .to eq(para("false"))
+      end
+
+      it "returns false for just false" do
+        expect(parse("\\nand{false}"))
+          .to eq(para("true"))
+      end
+
+      it "two-argument tests" do
+        expect(parse("\\nand{true true}"))
+          .to eq(para("false"))
+        expect(parse("\\nand{true false}"))
+          .to eq(para("true"))
+        expect(parse("\\nand{false true}"))
+          .to eq(para("true"))
+        expect(parse("\\nand{false false}"))
+          .to eq(para("true"))
+      end
+    end
+
     describe :boolean_or do
       it "returns false for no arguments" do
         expect(parse("\\or{}"))
@@ -522,17 +550,17 @@ end
     end
 
     describe :boolean_nor do
-      it "returns false for no arguments" do
+      it "returns true for no arguments" do
         expect(parse("\\nor{}"))
           .to eq(para("true"))
       end
 
-      it "returns true for just true" do
+      it "returns false for just true" do
         expect(parse("\\nor{true}"))
           .to eq(para("false"))
       end
 
-      it "returns false for just false" do
+      it "returns true for just false" do
         expect(parse("\\nor{false}"))
           .to eq(para("true"))
       end

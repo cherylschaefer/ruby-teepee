@@ -240,6 +240,10 @@ module Teepee
       end
     end
 
+    def boolean_nand expressions
+      boolean_not boolean_and expressions
+    end
+
     def boolean_nor expressions
       boolean_not boolean_or expressions
     end

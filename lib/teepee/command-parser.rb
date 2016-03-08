@@ -335,6 +335,8 @@ module Teepee
         @@commander.boolean_and expressions
       when "or"
         @@commander.boolean_or expressions
+      when "nand"
+        @@commander.boolean_nand expressions
       when "nor"
         @@commander.boolean_nor expressions
       when "xor"
