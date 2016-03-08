@@ -335,6 +335,8 @@ module Teepee
         @@commander.boolean_and expressions
       when "or"
         @@commander.boolean_or expressions
+      when "xor"
+        @@commander.boolean_xor expressions
       else
         command_error "unknown command #{command.to_html}"
       end

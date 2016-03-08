@@ -500,12 +500,12 @@ end
       end
 
       it "returns true for just true" do
-        expect(parse("\\and{true}"))
+        expect(parse("\\or{true}"))
           .to eq(para("true"))
       end
 
       it "returns false for just false" do
-        expect(parse("\\and{false}"))
+        expect(parse("\\or{false}"))
           .to eq(para("false"))
       end
 
@@ -517,6 +517,34 @@ end
         expect(parse("\\or{false true}"))
           .to eq(para("true"))
         expect(parse("\\or{false false}"))
+          .to eq(para("false"))
+      end
+    end
+
+    describe :boolean_xor do
+      it "returns false for no arguments" do
+        expect(parse("\\xor{}"))
+          .to eq(para("false"))
+      end
+
+      it "returns true for just true" do
+        expect(parse("\\xor{true}"))
+          .to eq(para("true"))
+      end
+
+      it "returns false for just false" do
+        expect(parse("\\xor{false}"))
+          .to eq(para("false"))
+      end
+
+      it "two-argument tests" do
+        expect(parse("\\xor{true true}"))
+          .to eq(para("false"))
+        expect(parse("\\xor{true false}"))
+          .to eq(para("true"))
+        expect(parse("\\xor{false true}"))
+          .to eq(para("true"))
+        expect(parse("\\xor{false false}"))
           .to eq(para("false"))
       end
     end

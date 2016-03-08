@@ -262,6 +262,35 @@ module Teepee
       end
     end
 
+    def boolean_xor expressions
+      # There are two schools of thought as to what a multi-variable XOR is.
+      # 1. Chained XORs, giving a parity check.
+      # 2. 'Exclusively' one true for ALL inputs.
+      # I'm going with the second: one and only one true, the rest false.
+      # It seems therefore that the zero-argument version should be false then.
+      if expressions.empty?
+        "false"
+      else
+        any_trues = false
+        expressions.each do |expression|
+          if expression.to_s == "true"
+            if any_trues
+              return "false"
+            else
+              any_trues = true
+            end
+          elsif expression.to_s == "false"
+            # do nothing
+          elsif expression.kind_of? WhitespaceToken
+            # do nothing
+          else
+            return command_error "Not a boolean value"
+          end
+        end
+        return any_trues.to_s
+      end
+    end
+
     def br
       html_tag :br, nil
     end
