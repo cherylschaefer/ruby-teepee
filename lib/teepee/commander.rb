@@ -240,6 +240,10 @@ module Teepee
       end
     end
 
+    def boolean_nor expressions
+      boolean_not boolean_or expressions
+    end
+
     def boolean_not expression
       if expression.to_s == "true"
         "false"

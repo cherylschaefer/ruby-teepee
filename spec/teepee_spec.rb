@@ -521,6 +521,34 @@ end
       end
     end
 
+    describe :boolean_nor do
+      it "returns false for no arguments" do
+        expect(parse("\\nor{}"))
+          .to eq(para("true"))
+      end
+
+      it "returns true for just true" do
+        expect(parse("\\nor{true}"))
+          .to eq(para("false"))
+      end
+
+      it "returns false for just false" do
+        expect(parse("\\nor{false}"))
+          .to eq(para("true"))
+      end
+
+      it "two-argument tests" do
+        expect(parse("\\nor{true true}"))
+          .to eq(para("false"))
+        expect(parse("\\nor{true false}"))
+          .to eq(para("false"))
+        expect(parse("\\nor{false true}"))
+          .to eq(para("false"))
+        expect(parse("\\nor{false false}"))
+          .to eq(para("true"))
+      end
+    end
+
     describe :boolean_xor do
       it "returns false for no arguments" do
         expect(parse("\\xor{}"))
