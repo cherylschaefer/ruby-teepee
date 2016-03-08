@@ -466,8 +466,9 @@ module Teepee
       ensure_numeric numbers.reduce :%
     end
 
-    def nbsp
-      "&nbsp;"
+    def nbsp count
+      count = 1 unless count and count.kind_of? Numeric and count > 0
+      "&nbsp;" * count
     end
 
     def note_id id

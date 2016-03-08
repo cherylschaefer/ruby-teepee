@@ -156,6 +156,18 @@ describe Teepee::Parser do
     end
   end
 
+  describe :nbsp do
+    it "can take no arguments, defaulting to 1" do
+      expect(parse("\\_"))
+        .to eq(para("&nbsp;"))
+    end
+
+    it "can take an optional multiple" do
+      expect(parse("\\_{2}"))
+        .to eq(para("&nbsp;&nbsp;"))
+    end
+  end
+
   describe :headers do
     describe :h1 do
       it "basic test" do

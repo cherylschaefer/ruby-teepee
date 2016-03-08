@@ -89,7 +89,7 @@ module Teepee
            "]-"
         @@commander.right_brace
       when "_"
-        @@commander.nbsp
+        @@commander.nbsp optional_number_from_expression
       when "space"
         @@commander.space
       when "br", "newline"
@@ -365,6 +365,12 @@ module Teepee
 
     def number_from_expression
       numbers_from_expressions.first
+    end
+
+    def optional_number_from_expression
+      if not expressions.empty?
+        number_from_expression
+      end
     end
 
     class << self
