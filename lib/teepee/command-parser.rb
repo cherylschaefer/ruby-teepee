@@ -341,6 +341,8 @@ module Teepee
         @@commander.boolean_nor expressions
       when "xor"
         @@commander.boolean_xor expressions
+      when "xnor"
+        @@commander.boolean_xnor expressions
       else
         command_error "unknown command #{command.to_html}"
       end

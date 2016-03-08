@@ -577,6 +577,34 @@ end
       end
     end
 
+    describe :boolean_xnor do
+      it "returns true for no arguments" do
+        expect(parse("\\xnor{}"))
+          .to eq(para("true"))
+      end
+
+      it "returns false for just true" do
+        expect(parse("\\xnor{true}"))
+          .to eq(para("false"))
+      end
+
+      it "returns true for just false" do
+        expect(parse("\\xnor{false}"))
+          .to eq(para("true"))
+      end
+
+      it "two-argument tests" do
+        expect(parse("\\xnor{true true}"))
+          .to eq(para("true"))
+        expect(parse("\\xnor{true false}"))
+          .to eq(para("false"))
+        expect(parse("\\xnor{false true}"))
+          .to eq(para("false"))
+        expect(parse("\\xnor{false false}"))
+          .to eq(para("true"))
+      end
+    end
+
     describe :boolean_xor do
       it "returns false for no arguments" do
         expect(parse("\\xor{}"))

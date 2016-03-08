@@ -270,6 +270,10 @@ module Teepee
       end
     end
 
+    def boolean_xnor expressions
+      boolean_not boolean_xor expressions
+    end
+
     def boolean_xor expressions
       # There are two schools of thought as to what a multi-variable XOR is.
       # 1. Chained XORs, giving a parity check.
