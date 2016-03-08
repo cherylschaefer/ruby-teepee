@@ -64,7 +64,9 @@ module Teepee
 
     def to_html
       case command.word
-      when "backslash", "bslash"
+      when "backslash",
+           "bslash",
+           "-/"
         @@commander.backslash
       when "left-brace",
            "left_brace",
@@ -73,7 +75,8 @@ module Teepee
            "opening-brace",
            "opening_brace",
            "openingbrace",
-           "obrace"
+           "obrace",
+           "-["
         @@commander.left_brace
       when "right-brace",
            "right_brace",
@@ -82,7 +85,8 @@ module Teepee
            "closing-brace",
            "closing_brace",
            "closingbrace",
-           "cbrace"
+           "cbrace",
+           "]-"
         @@commander.right_brace
       when "_"
         @@commander.nbsp
