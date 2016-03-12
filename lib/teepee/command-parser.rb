@@ -76,7 +76,7 @@ module Teepee
            "opening_brace",
            "openingbrace",
            "obrace",
-           "-["
+           "-("
         @@commander.left_brace
       when "right-brace",
            "right_brace",
@@ -86,7 +86,7 @@ module Teepee
            "closing_brace",
            "closingbrace",
            "cbrace",
-           "]-"
+           ")-"
         @@commander.right_brace
       when "pipe"
         @@commander.pipe
