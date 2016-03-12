@@ -73,8 +73,4 @@ module Teepee
   class PipeToken < SingleCharacterToken
     CHARACTER_MATCHED = "|"
   end
-
-  class HashToken < SingleCharacterToken
-    CHARACTER_MATCHED = "#"
-  end
 end

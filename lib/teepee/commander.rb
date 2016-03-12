@@ -399,10 +399,6 @@ module Teepee
       html_tag :h6, expressions
     end
 
-    def hash
-      "#"
-    end
-
     def i
       command_error "Complex numbers are not yet supported."
     end

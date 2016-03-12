@@ -90,8 +90,6 @@ module Teepee
         @@commander.right_brace
       when "pipe"
         @@commander.pipe
-      when "hash"
-        @@commander.hash
       when "_"
         @@commander.nbsp optional_number_from_expression
       when "space"

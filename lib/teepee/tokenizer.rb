@@ -59,7 +59,6 @@ module Teepee
            result =     LeftBraceToken.matches?(rest) or
            result =    RightBraceToken.matches?(rest) or
            result =          PipeToken.matches?(rest) or
-           result =          HashToken.matches?(rest) or
            result = EmptyNewlinesToken.matches?(rest) or # String Tokens
            result =    WhitespaceToken.matches?(rest) or
            result =        NumberToken.matches?(rest) or
