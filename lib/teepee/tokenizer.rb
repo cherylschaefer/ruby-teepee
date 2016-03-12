@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # -*- mode: Ruby -*-
 
-# Copyright © 2013-2015, Christopher Mark Gore,
+# Copyright © 2013-2016, Christopher Mark Gore,
 # Soli Deo Gloria,
 # All rights reserved.
 #
@@ -58,6 +58,8 @@ module Teepee
         if result =     BackslashToken.matches?(rest) or # Single Character Tokens
            result =     LeftBraceToken.matches?(rest) or
            result =    RightBraceToken.matches?(rest) or
+           result =          PipeToken.matches?(rest) or
+           result =          HashToken.matches?(rest) or
            result = EmptyNewlinesToken.matches?(rest) or # String Tokens
            result =    WhitespaceToken.matches?(rest) or
            result =        NumberToken.matches?(rest) or

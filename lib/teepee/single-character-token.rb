@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # -*- mode: Ruby -*-
 
-# Copyright © 2013-2015, Christopher Mark Gore,
+# Copyright © 2013-2016, Christopher Mark Gore,
 # Soli Deo Gloria,
 # All rights reserved.
 #
@@ -68,5 +68,13 @@ module Teepee
 
   class RightBraceToken < SingleCharacterToken
     CHARACTER_MATCHED = "}"
+  end
+
+  class PipeToken < SingleCharacterToken
+    CHARACTER_MATCHED = "|"
+  end
+
+  class HashToken < SingleCharacterToken
+    CHARACTER_MATCHED = "#"
   end
 end
