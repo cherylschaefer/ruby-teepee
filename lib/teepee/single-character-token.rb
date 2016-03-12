@@ -70,7 +70,27 @@ module Teepee
     CHARACTER_MATCHED = "}"
   end
 
+  class LeftBracketToken < SingleCharacterToken
+    CHARACTER_MATCHED = "["
+  end
+
+  class RightBracketToken < SingleCharacterToken
+    CHARACTER_MATCHED = "]"
+  end
+
   class PipeToken < SingleCharacterToken
     CHARACTER_MATCHED = "|"
+  end
+
+  class BackquoteToken < SingleCharacterToken
+    CHARACTER_MATCHED = "`"
+  end
+
+  class SquiggleToken < SingleCharacterToken
+    CHARACTER_MATCHED = "~"
+  end
+
+  class LagergeldToken < SingleCharacterToken
+    CHARACTER_MATCHED = "€"
   end
 end

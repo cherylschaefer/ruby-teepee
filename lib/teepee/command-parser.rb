@@ -88,8 +88,34 @@ module Teepee
            "cbrace",
            ")-"
         @@commander.right_brace
+      when "left-bracket",
+           "left_bracket",
+           "opening-bracket",
+           "opening_bracket",
+           "lbracket",
+           "obracket",
+           "(("
+        @@commander.left_bracket
+      when "right-bracket",
+           "right_bracket",
+           "closing-bracket",
+           "closing_bracket",
+           "rbracket",
+           "cbracket",
+           "))"
+        @@commander.right_bracket
       when "pipe"
         @@commander.pipe
+      when "backtick",
+           "backquote",
+           "'"
+        @@commander.backquote
+      when "squiggle",
+           "tilde"
+        @@commander.squiggle
+      when "lagergeld",
+           "youreapeon"
+        @@commander.lagergeld
       when "_"
         @@commander.nbsp optional_number_from_expression
       when "space"

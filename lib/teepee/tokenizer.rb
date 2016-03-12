@@ -57,8 +57,13 @@ module Teepee
       while rest.length > 0
         if result =     BackslashToken.matches?(rest) or # Single Character Tokens
            result =     LeftBraceToken.matches?(rest) or
+           result =   LeftBracketToken.matches?(rest) or
            result =          PipeToken.matches?(rest) or
            result =    RightBraceToken.matches?(rest) or
+           result =  RightBracketToken.matches?(rest) or
+           result =     BackquoteToken.matches?(rest) or
+           result =      SquiggleToken.matches?(rest) or
+           result =     LagergeldToken.matches?(rest) or
            result = EmptyNewlinesToken.matches?(rest) or # String Tokens
            result =    WhitespaceToken.matches?(rest) or
            result =        NumberToken.matches?(rest) or

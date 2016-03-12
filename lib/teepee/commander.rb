@@ -216,6 +216,10 @@ module Teepee
       html_tag :b, expressions
     end
 
+    def backquote
+      "`"
+    end
+
     def backslash
       "\\"
     end
@@ -466,6 +470,10 @@ module Teepee
       "{"
     end
 
+    def left_bracket
+      "["
+    end
+
     def lgamma n
       ensure_numeric Math::lgamma(n).first
     end
@@ -530,6 +538,10 @@ module Teepee
 
     def right_brace
       "}"
+    end
+
+    def right_bracket
+      "]"
     end
 
     def sin angle
