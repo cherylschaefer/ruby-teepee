@@ -63,7 +63,7 @@ module Teepee
            result =  RightBracketToken.matches?(rest) or
            result =     BackquoteToken.matches?(rest) or
            result =      SquiggleToken.matches?(rest) or
-           result =     LagergeldToken.matches?(rest) or
+           result =        DollarToken.matches?(rest) or
            result = EmptyNewlinesToken.matches?(rest) or # String Tokens
            result =    WhitespaceToken.matches?(rest) or
            result =        NumberToken.matches?(rest) or

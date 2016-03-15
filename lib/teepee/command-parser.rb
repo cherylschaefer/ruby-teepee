@@ -113,9 +113,8 @@ module Teepee
       when "squiggle",
            "tilde"
         @@commander.squiggle
-      when "lagergeld",
-           "youreapeon"
-        @@commander.lagergeld
+      when "dollar"
+        @@commander.dollar
       when "_"
         @@commander.nbsp optional_number_from_expression
       when "space"

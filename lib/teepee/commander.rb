@@ -327,6 +327,10 @@ module Teepee
       html_tag :del, expressions
     end
 
+    def dollar
+      "$"
+    end
+
     def e
       Math::E
     end

@@ -90,7 +90,7 @@ module Teepee
     CHARACTER_MATCHED = "~"
   end
 
-  class LagergeldToken < SingleCharacterToken
-    CHARACTER_MATCHED = "€"
+  class DollarToken < SingleCharacterToken
+    CHARACTER_MATCHED = "$"
   end
 end
