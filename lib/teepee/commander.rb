@@ -560,6 +560,10 @@ module Teepee
       html_tag :small, expressions
     end
 
+    def squiggle
+      "~"
+    end
+
     def sqrt number
       ensure_numeric Math.sqrt number
     end
