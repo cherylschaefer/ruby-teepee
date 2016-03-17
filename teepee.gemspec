@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- Coding: utf-8 -*-
 # -*- mode: Ruby -*-
 
 # Copyright © 2013-2016, Christopher Mark Gore,
@@ -37,8 +37,8 @@
 
 Gem::Specification.new do |s|
   s.name = 'teepee'
-  s.version = '0.11.0'
-  s.date = '2016-03-15'
+  s.version = '0.11.1'
+  s.date = '2016-03-16'
   s.summary = "Teepee is a markup language for ThinkingBicycle.com."
   s.description = "Teepee is a markup language, loosely based on Lisp and TeX, for ThinkingBicycle.com."
   s.authors = ['Christopher Mark Gore']
