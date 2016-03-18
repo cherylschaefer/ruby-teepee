@@ -520,8 +520,9 @@ module Teepee
     end
 
     def mailto email_address
+      email_address = email_address.to_s
       if valid_email_address? email_address
-        html_tag :a, email_address, {href: "mailto:#{email_address}"}
+        html_tag :a, [email_address], {href: "mailto:#{email_address}"}
       else
         command_error "I'm not sure that's a valid email address."
       end
