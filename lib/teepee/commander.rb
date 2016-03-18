@@ -138,6 +138,10 @@ module Teepee
       left_strip right_strip expressions
     end
 
+    def valid_email_address? email_address
+      email_address =~ /\A[[:graph:]]+@[\w.]+\z/
+    end
+
     #----------------------------------------------------------------------------
 
     def + *numbers
@@ -513,6 +517,14 @@ module Teepee
 
     def log10 number
       ensure_numeric Math.log10 number
+    end
+
+    def mailto email_address
+      if valid_email_address?
+        html_tag :a, email_address, {href: "mailto:#{email_address}"}
+      else
+        command_error "I'm not sure that's a valid email address."
+      end
     end
 
     def mod *numbers

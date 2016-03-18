@@ -259,6 +259,8 @@ module Teepee
            "href",
            "url"
         @@commander.link expressions
+      when "mailto"
+        @@commander.mailto first_word_token
       when "img",
            "image"
         @@commander.image expressions
