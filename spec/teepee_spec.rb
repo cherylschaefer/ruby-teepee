@@ -453,7 +453,7 @@ end
   describe :mailto do
     it "works for a simple email address" do
       expect(parse("\\mailto{foo@example.com}"))
-        to eq(para("<a href=\"mailto:foo@example.com\">foo@example.com</a>"))
+        .to eq(para("<a href=\"mailto:foo@example.com\">foo@example.com</a>"))
     end
   end
 
