@@ -339,6 +339,10 @@ module Teepee
       html_tag :del, expressions
     end
 
+    def do_operator expressions
+      html_tag :span, expressions
+    end
+
     def dollar
       "$"
     end

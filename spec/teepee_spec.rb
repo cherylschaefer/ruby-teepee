@@ -677,5 +677,12 @@ end
         end
       end
     end
+
+    describe :do_operator do
+      it "wraps in a span tag" do
+        expect(parse("\\do{1 2 3}"))
+          .to eq(para("<span>1 2 3</span>"))
+      end
+    end
   end
 end
