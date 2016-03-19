@@ -37,7 +37,7 @@
 
 Gem::Specification.new do |s|
   s.name = 'teepee'
-  s.version = '0.12.3'
+  s.version = '0.12.4'
   s.date = '2016-03-19'
   s.summary = "Teepee is a markup language for ThinkingBicycle.com."
   s.description = "Teepee is a markup language, loosely based on Lisp and TeX, for ThinkingBicycle.com."
