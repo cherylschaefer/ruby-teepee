@@ -61,6 +61,10 @@ module Teepee
       command_error "The command #{command} is not yet implemented."
     end
 
+    def numeric? *numbers
+      numbers.all? {|number| number.kind_of? Numeric}
+    end
+
     def ensure_numeric number
       if number.kind_of? Complex
         command_error "Complex numbers are not yet supported."
