@@ -676,12 +676,22 @@ end
             .to eq(para(""))
         end
       end
+
+      it "can handle do operators as the two clauses" do
+        expect(parse("\\if{true \\do{foo bar} baz}"))
+          .to eq(para("<span>foo bar</span>"))
+      end
     end
 
     describe :do_operator do
       it "wraps in a span tag" do
         expect(parse("\\do{1 2 3}"))
           .to eq(para("<span>1 2 3</span>"))
+      end
+
+      it "can nest" do
+        expect(parse("\\do{1 2 \\do{3 4 5}}"))
+          .to eq(para("<span>1 2 <span>3 4 5</span></span>"))
       end
     end
   end

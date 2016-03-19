@@ -430,9 +430,9 @@ module Teepee
     def if_operator expressions
       conditional, _, true_clause, _, false_clause = expressions
       if true_constant? conditional
-        true_clause
-      else
-        false_clause
+        true_clause.to_html
+      elsif false_clause
+        false_clause.to_html
       end
     end
 
