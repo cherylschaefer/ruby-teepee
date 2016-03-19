@@ -374,6 +374,16 @@ module Teepee
         @@commander.boolean_xnor expressions
       when "<"
         @@commander.less_than *numbers_from_expressions
+      when "<="
+        @@commander.less_than_or_equal *numbers_from_expressions
+      when ">"
+        @@commander.greater_than *numbers_from_expressions
+      when ">="
+        @@commander.greater_than_or_equal *numbers_from_expressions
+      when "="
+        @@commander.equal *numbers_from_expressions
+      when "!="
+        @@commander.not_equal *numbers_from_expressions
       when "if"
         @@commander.if_operator expressions
       when "do"

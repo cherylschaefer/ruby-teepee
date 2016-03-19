@@ -188,16 +188,6 @@ module Teepee
       numbers.inject { |base, percent| base*percent/100.0 }
     end
 
-    def less_than *numbers
-      if numbers.empty?
-        true_constant
-      elsif numbers.length == 1
-        true_constant
-      else
-        numbers[0] < numbers[1] and less_than *numbers.rest
-      end
-    end
-
     def add_percentage *numbers
       numbers.inject {|base, percent| base * (1+percent/100.0) }
     end
@@ -361,6 +351,16 @@ module Teepee
       Math::E
     end
 
+    def equal *numbers
+      if numbers.empty?
+        true_constant
+      elsif numbers.length == 1
+        true_constant
+      else
+        numbers[0] == numbers[1] and equal *numbers.rest
+      end
+    end
+
     def enumerate expressions
       html_tag :ol, expressions
     end
@@ -407,6 +407,26 @@ module Teepee
 
     def gamma number
       ensure_numeric Math.gamma number
+    end
+
+    def greater_than *numbers
+      if numbers.empty?
+        true_constant
+      elsif numbers.length == 1
+        true_constant
+      else
+        numbers[0] > numbers[1] and greater_than *numbers.rest
+      end
+    end
+
+    def greater_than_or_equal *numbers
+      if numbers.empty?
+        true_constant
+      elsif numbers.length == 1
+        true_constant
+      else
+        numbers[0] >= numbers[1] and greater_than_or_equal *numbers.rest
+      end
     end
 
     def h1 expressions
@@ -514,6 +534,26 @@ module Teepee
       "["
     end
 
+    def less_than *numbers
+      if numbers.empty?
+        true_constant
+      elsif numbers.length == 1
+        true_constant
+      else
+        numbers[0] < numbers[1] and less_than *numbers.rest
+      end
+    end
+
+    def less_than_or_equal *numbers
+      if numbers.empty?
+        true_constant
+      elsif numbers.length == 1
+        true_constant
+      else
+        numbers[0] <= numbers[1] and less_than_or_equal *numbers.rest
+      end
+    end
+
     def lgamma n
       ensure_numeric Math::lgamma(n).first
     end
@@ -567,6 +607,16 @@ module Teepee
     def nbsp count
       count = 1 unless count and count.kind_of? Numeric and count > 0
       "&nbsp;" * count
+    end
+
+    def not_equal *numbers
+      if numbers.empty?
+        true_constant
+      elsif numbers.length == 1
+        true_constant
+      else
+        numbers[0] != numbers[1] and equal *numbers.rest
+      end
     end
 
     def note_id id
