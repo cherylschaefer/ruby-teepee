@@ -185,22 +185,18 @@ module Teepee
     end
 
     def % *numbers
-      ensure_numeric numbers
       numbers.inject { |base, percent| base*percent/100.0 }
     end
 
     def add_percentage *numbers
-      ensure_numeric numbers
       numbers.inject {|base, percent| base * (1+percent/100.0) }
     end
 
     def subtract_percentage *numbers
-      ensure_numeric numbers
       numbers.inject {|base, percent| base * (1-percent/100.0) }
     end
 
     def percent_total *numbers
-      ensure_numeric numbers
       numbers.inject {|total, part| Float(part)/Float(total)*100.0 }
     end
 
