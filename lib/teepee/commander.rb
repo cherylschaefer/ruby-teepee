@@ -142,6 +142,14 @@ module Teepee
       email_address =~ /\A[[:graph:]]+@[\w.]+\z/
     end
 
+    def true_constant? expression
+      expression.to_s == "true"
+    end
+
+    def false_constant? expression
+      expression.to_s == "false"
+    end
+
     #----------------------------------------------------------------------------
 
     def + *numbers
@@ -413,6 +421,15 @@ module Teepee
 
     def i
       command_error "Complex numbers are not yet supported."
+    end
+
+    def if_operator expressions
+      conditional, _, true_clause, _, false_clause = expressions
+      if true_constant? conditional
+        true_clause
+      else
+        false_clause
+      end
     end
 
     def image expressions

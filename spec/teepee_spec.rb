@@ -651,5 +651,31 @@ end
           .to eq(para("true"))
       end
     end
+
+    describe :if_operator do
+      describe :two_argument_variant do
+        it "maps true to the true clause" do
+          expect(parse("\\if{true foo bar}"))
+            .to eq(para("foo"))
+        end
+
+        it "maps false to the false clause" do
+          expect(parse("\\if{false foo bar}"))
+            .to eq(para("bar"))
+        end
+      end
+
+      describe :one_argument_variant do
+        it "maps true to the true clause" do
+          expect(parse("\\if{true foo}"))
+            .to eq(para("foo"))
+        end
+
+        it "maps false to an empty string" do
+          expect(parse("\\if{false foo}"))
+            .to eq(para(""))
+        end
+      end
+    end
   end
 end

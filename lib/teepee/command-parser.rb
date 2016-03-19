@@ -372,6 +372,8 @@ module Teepee
         @@commander.boolean_xor expressions
       when "xnor"
         @@commander.boolean_xnor expressions
+      when "if"
+        @@commander.if_operator expressions
       else
         command_error "unknown command #{command.to_html}"
       end
