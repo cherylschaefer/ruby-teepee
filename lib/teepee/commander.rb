@@ -428,6 +428,7 @@ module Teepee
     end
 
     def if_operator expressions
+      expressions = strip expressions
       conditional, _, true_clause, _, false_clause = expressions
       if true_constant? conditional
         true_clause.to_html

@@ -681,6 +681,22 @@ end
         expect(parse("\\if{true \\do{foo bar} baz}"))
           .to eq(para("<span>foo bar</span>"))
       end
+
+      it "ignores extra leading whitespace" do
+        expect(parse("\\if{  true foo bar}"))
+          .to eq(para("foo"))
+      end
+
+      it "ignores extra trailing whitespace" do
+        expect(parse("\\if{false foo bar   }"))
+          .to eq(para("bar"))
+      end
+
+
+      it "ignores extra trailing expressions" do
+        expect(parse("\\if{false foo bar baz}"))
+          .to eq(para("bar"))
+      end
     end
 
     describe :do_operator do
