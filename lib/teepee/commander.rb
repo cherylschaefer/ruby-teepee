@@ -246,10 +246,10 @@ module Teepee
 
     def boolean_and expressions
       if expressions.empty?
-        "true"
-      elsif expressions.first.to_s == "false"
-        "false"
-      elsif expressions.first.to_s == "true" or expressions.first.kind_of? WhitespaceToken
+        true_constant
+      elsif false_constant? expressions.first
+        false_constant
+      elsif true_constant? expressions.first or expressions.first.kind_of? WhitespaceToken
         boolean_and expressions[1..-1]
       else
         command_error "Not a boolean value #{expressions.first}"
@@ -265,10 +265,10 @@ module Teepee
     end
 
     def boolean_not expression
-      if expression.to_s == "true"
-        "false"
-      elsif expression.to_s == "false"
-        "true"
+      if true_constant? expression
+        false_constant
+      elsif false_constant? expression
+        true_constant
       else
         command_error "Not a boolean value"
       end
@@ -276,10 +276,10 @@ module Teepee
 
     def boolean_or expressions
       if expressions.empty?
-        "false"
-      elsif expressions.first.to_s == "true"
-        "true"
-      elsif expressions.first.to_s == "false" or expressions.first.kind_of? WhitespaceToken
+        false_constant
+      elsif true_constant? expressions.first
+        true_constant
+      elsif false_constant? expressions.first or expressions.first.kind_of? WhitespaceToken
         boolean_or expressions[1..-1]
       else
         command_error "Not a boolean value"
@@ -297,17 +297,17 @@ module Teepee
       # I'm going with the second: one and only one true, the rest false.
       # It seems therefore that the zero-argument version should be false then.
       if expressions.empty?
-        "false"
+        false_constant
       else
         any_trues = false
         expressions.each do |expression|
-          if expression.to_s == "true"
+          if true_constant? expression
             if any_trues
-              return "false"
+              return false_constant
             else
               any_trues = true
             end
-          elsif expression.to_s == "false"
+          elsif false_constant? expression
             # do nothing
           elsif expression.kind_of? WhitespaceToken
             # do nothing
