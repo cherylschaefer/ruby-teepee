@@ -372,6 +372,8 @@ module Teepee
         @@commander.boolean_xor expressions
       when "xnor"
         @@commander.boolean_xnor expressions
+      when "<"
+        @@commander.less_than *numbers_from_expressions
       when "if"
         @@commander.if_operator expressions
       when "do"

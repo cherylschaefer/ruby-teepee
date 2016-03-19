@@ -188,6 +188,16 @@ module Teepee
       numbers.inject { |base, percent| base*percent/100.0 }
     end
 
+    def less_than *numbers
+      if numbers.empty?
+        true_constant
+      elsif numbers.length == 1
+        true_constant
+      else
+        numbers[0] < numbers[1] and less_than *numbers.rest
+      end
+    end
+
     def add_percentage *numbers
       numbers.inject {|base, percent| base * (1+percent/100.0) }
     end

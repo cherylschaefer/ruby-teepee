@@ -321,11 +321,41 @@ end
     end
   end
 
+  describe :comparisons do
+    describe :< do
+      it "works for no arguments" do
+        expect(parse("\\<{}"))
+          .to eq(para("true"))
+      end
+
+      it "works for one argument" do
+        expect(parse("\\<{123}"))
+          .to eq(para("true"))
+      end
+
+      it "works for two arguments" do
+        expect(parse("\\<{123 456}"))
+          .to eq(para("true"))
+        expect(parse("\\<{123 123}"))
+          .to eq(para("false"))
+        expect(parse("\\<{123 122.5}"))
+          .to eq(para("false"))
+      end
+
+      it "works for many arguments" do
+        expect(parse("\\<{123 456 789 101112}"))
+          .to eq(para("true"))
+        expect(parse("\\<{1 2 3 123 123}"))
+          .to eq(para("false"))
+      end
+    end
+  end
+
   describe :trigonometry do
     describe :sin do
       it "basic test" do
         expect(parse("\\sin{0}"))
-              .== para("0.0")
+          .to eq(para("0.0"))
       end
     end
 
