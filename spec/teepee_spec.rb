@@ -66,14 +66,6 @@ Line 1 <b>Line 2 Line 3</b> Line 4
 </p>
 "
 
-def para(string)
-  "<p>\n#{string}\n</p>\n"
-end
-
-def parse(string)
-  Teepee::Parser.new(string).to_html
-end
-
 describe Teepee::Parser do
   it "can be instantiated" do
     expect(Teepee::Parser.new(""))

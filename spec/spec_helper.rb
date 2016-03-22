@@ -47,3 +47,11 @@ require 'monkey-patch'
 require 'teepee'
 
 include ERB::Util
+
+def para(string)
+  "<p>\n#{string}\n</p>\n"
+end
+
+def parse(string)
+  Teepee::Parser.new(string).to_html
+end
