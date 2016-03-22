@@ -682,6 +682,18 @@ end
       end
     end
 
+    describe :do_operator do
+      it "wraps in a span tag" do
+        expect(parse("\\do{1 2 3}"))
+          .to eq(para("<span>1 2 3</span>"))
+      end
+
+      it "can nest" do
+        expect(parse("\\do{1 2 \\do{3 4 5}}"))
+          .to eq(para("<span>1 2 <span>3 4 5</span></span>"))
+      end
+    end
+
     describe :if_operator do
       describe :two_argument_variant do
         it "maps true to the true clause" do
@@ -726,18 +738,6 @@ end
       it "ignores extra trailing expressions" do
         expect(parse("\\if{false foo bar baz}"))
           .to eq(para("bar"))
-      end
-    end
-
-    describe :do_operator do
-      it "wraps in a span tag" do
-        expect(parse("\\do{1 2 3}"))
-          .to eq(para("<span>1 2 3</span>"))
-      end
-
-      it "can nest" do
-        expect(parse("\\do{1 2 \\do{3 4 5}}"))
-          .to eq(para("<span>1 2 <span>3 4 5</span></span>"))
       end
     end
   end
