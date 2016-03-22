@@ -307,7 +307,8 @@ module Teepee
         @@commander.- *numbers_from_expressions
       when "*"
         @@commander.* *numbers_from_expressions
-      when "/"
+      when "/",
+           "÷"
         @@commander./ *numbers_from_expressions
       when "%"
         @@commander.% *numbers_from_expressions
@@ -374,15 +375,18 @@ module Teepee
         @@commander.boolean_xnor expressions
       when "<"
         @@commander.less_than *numbers_from_expressions
-      when "<="
+      when "<=",
+           "≤"
         @@commander.less_than_or_equal *numbers_from_expressions
       when ">"
         @@commander.greater_than *numbers_from_expressions
-      when ">="
+      when ">=",
+           "≥"
         @@commander.greater_than_or_equal *numbers_from_expressions
       when "="
         @@commander.equal *numbers_from_expressions
-      when "!="
+      when "!=",
+           "≠"
         @@commander.not_equal *numbers_from_expressions
       when "if"
         @@commander.if_operator expressions
