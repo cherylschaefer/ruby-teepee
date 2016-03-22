@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # -*- mode: Ruby -*-
 
-# Copyright © 2013 - 2015, Christopher Mark Gore,
+# Copyright © 2013 - 2016, Christopher Mark Gore,
 # Soli Deo Gloria,
 # All rights reserved.
-#
+#0
 # 2317 South River Road, Saint Charles, Missouri 63303 USA.
 # Web: http://cgore.com
 # Email: cgore@cgore.com
@@ -38,3 +38,12 @@
 TEEPEE_TOPDIR = File.expand_path ".."
 TEEPEE_LIBDIR = TEEPEE_TOPDIR + "/lib/"
 $:.unshift TEEPEE_LIBDIR
+
+require 'uri'
+
+require 'active_support/all'
+require 'monkey-patch'
+
+require 'teepee'
+
+include ERB::Util

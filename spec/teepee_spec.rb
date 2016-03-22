@@ -37,8 +37,6 @@
 
 require 'spec_helper'
 
-require 'teepee'
-
 TWO_PARAGRAPHS_BEFORE =
 "Line 1
 Line 2
