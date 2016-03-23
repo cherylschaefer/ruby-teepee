@@ -730,5 +730,49 @@ end
           .to eq(para("bar"))
       end
     end
+
+    describe :when_operator do
+      it "evaluates when the conditional is true" do
+        expect(parse("\\when{true red white blue}"))
+          .to eq(para("<span>red white blue</span>"))
+      end
+
+      it "does not evaluate when the conditional is false" do
+        expect(parse("\\when{false red white blue}"))
+          .to eq(para(""))
+      end
+
+      it "doesn't wrap a single clause in a span" do
+        expect(parse("\\when{true lonely}"))
+          .to eq(para("lonely"))
+      end
+
+      it "doesn't freak out with no body" do
+        expect(parse("\\when{true}"))
+          .to eq(para(""))
+      end
+    end
+
+    describe :unless_operator do
+      it "evaluates when the conditional is false" do
+        expect(parse("\\unless{false red white blue}"))
+          .to eq(para("<span>red white blue</span>"))
+      end
+
+      it "does not evaluate when the conditional is true" do
+        expect(parse("\\unless{true red white blue}"))
+          .to eq(para(""))
+      end
+
+      it "doesn't wrap a single clause in a span" do
+        expect(parse("\\unless{false lonely}"))
+          .to eq(para("lonely"))
+      end
+
+      it "doesn't freak out with no body" do
+        expect(parse("\\unless{false}"))
+          .to eq(para(""))
+      end
+    end
   end
 end

@@ -35,16 +35,6 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-require 'uri'
-
-require 'active_support/all'
-require 'monkey-patch'
-
-require 'teepee/constants'
-require 'teepee/errors'
-
-include ERB::Util
-
 module Teepee
   class Commander
     def valid_uri? uri
@@ -715,11 +705,37 @@ module Teepee
       html_tag :u, expressions
     end
 
+    def unless_operator expressions
+      expressions = strip expressions
+      conditional = expressions.first
+      expressions = strip expressions.rest
+      if false_constant? conditional
+        if expressions.length <= 1
+          expressions.first
+        else
+          do_operator expressions
+        end
+      end
+    end
+
     def user user
       if not user
         command_error "user: error: no user specified"
       else
         tb_href "users/#{user}", user.to_s
+      end
+    end
+
+    def when_operator expressions
+      expressions = strip expressions
+      conditional = expressions.first
+      expressions = strip expressions.rest
+      if true_constant? conditional
+        if expressions.length <= 1
+          expressions.first
+        else
+          do_operator expressions
+        end
       end
     end
   end

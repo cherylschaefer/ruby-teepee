@@ -390,6 +390,10 @@ module Teepee
         @@commander.not_equal *numbers_from_expressions
       when "if"
         @@commander.if_operator expressions
+      when "when"
+        @@commander.when_operator expressions
+      when "unless"
+        @@commander.unless_operator expressions
       when "do"
         @@commander.do_operator expressions
       else
