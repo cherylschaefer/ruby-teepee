@@ -684,6 +684,20 @@ end
       end
     end
 
+    describe :prog1_operator do
+      it "pulls out the first expression" do
+        expect(parse("\\prog1{foo bar baz}"))
+          .to eq(para("foo"))
+      end
+    end
+
+    describe :progn_operator do
+      it "pulls out the last expression" do
+        expect(parse("\\progn{foo bar baz}"))
+          .to eq(para("baz"))
+      end
+    end
+
     describe :if_operator do
       describe :two_argument_variant do
         it "maps true to the true clause" do

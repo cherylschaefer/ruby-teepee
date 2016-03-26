@@ -634,6 +634,14 @@ module Teepee
       "|"
     end
 
+    def prog1_operator expressions
+      expressions.first
+    end
+
+    def progn_operator expressions
+      expressions.last
+    end
+
     def radians2degrees radians
       ensure_numeric(radians * 180.0 / Math::PI)
     end

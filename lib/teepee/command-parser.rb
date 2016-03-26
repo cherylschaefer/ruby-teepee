@@ -396,6 +396,10 @@ module Teepee
         @@commander.unless_operator expressions
       when "do"
         @@commander.do_operator expressions
+      when "prog1"
+        @@commander.prog1_operator expressions
+      when "progn"
+        @@commander.progn_operator expressions
       when "cond"
         @@commander.cond_operator expressions
       else
