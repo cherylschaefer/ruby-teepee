@@ -317,6 +317,15 @@ module Teepee
       html_tag :br, nil
     end
 
+    def cond_operator expressions
+      conditional, _, form, *rest = strip expressions
+      if true_constant? conditional
+        form
+      elsif not rest.empty?
+        cond_operator rest
+      end
+    end
+
     def cos angle
       ensure_numeric Math.cos angle
     end

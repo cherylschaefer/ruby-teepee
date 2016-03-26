@@ -396,6 +396,8 @@ module Teepee
         @@commander.unless_operator expressions
       when "do"
         @@commander.do_operator expressions
+      when "cond"
+        @@commander.cond_operator expressions
       else
         command_error "unknown command #{command.to_html}"
       end

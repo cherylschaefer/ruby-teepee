@@ -774,5 +774,37 @@ end
           .to eq(para(""))
       end
     end
+
+    describe :cond_operator do
+      it "does nothing if given no arguments" do
+        expect(parse("\\cond{}"))
+          .to eq(para(""))
+      end
+
+      it "does nothing with just a single conditional" do
+        expect(parse("\\cond{true}"))
+          .to eq(para(""))
+      end
+
+      it "works with a single true clause" do
+        expect(parse("\\cond{true foo}"))
+          .to eq(para("foo"))
+      end
+
+      it "works with a single false clause" do
+        expect(parse("\\cond{false foo}"))
+          .to eq(para(""))
+      end
+
+      it "works with a multi-clause conditional" do
+        expect(parse("\\cond{false foo false bar true baz true quux}"))
+          .to eq(para("baz"))
+      end
+
+      it "works with a multi-clause conditional with no true conditionals" do
+        expect(parse("\\cond{false foo false bar false baz false quux}"))
+          .to eq(para(""))
+      end
+    end
   end
 end
