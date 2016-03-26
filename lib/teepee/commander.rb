@@ -317,6 +317,21 @@ module Teepee
       html_tag :br, nil
     end
 
+    def case_operator expressions
+      value, _, *rest = strip expressions
+      if value and not rest.empty?
+        def cond_helper value, expressions
+          test_value, _, form, *rest = strip expressions
+          if equal value, test_value
+            form
+          elsif not rest.empty?
+            cond_helper value, rest
+          end
+        end
+        cond_helper value, rest
+      end
+    end
+
     def cond_operator expressions
       conditional, _, form, *rest = strip expressions
       if true_constant? conditional
@@ -354,13 +369,13 @@ module Teepee
       Math::E
     end
 
-    def equal *numbers
-      if numbers.empty?
+    def equal *expressions
+      if expressions.empty?
         true_constant
-      elsif numbers.length == 1
+      elsif expressions.length == 1
         true_constant
       else
-        numbers[0] == numbers[1] and equal *numbers.rest
+        expressions[0].to_s == expressions[1].to_s and equal *expressions.rest
       end
     end
 

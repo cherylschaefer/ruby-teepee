@@ -820,5 +820,42 @@ end
           .to eq(para(""))
       end
     end
+
+    describe :case_operator do
+      it "does nothing if given no arguments" do
+        expect(parse("\\case{}"))
+          .to eq(para(""))
+      end
+
+      it "does nothing with just a value" do
+        expect(parse("\\case{123}"))
+          .to eq(para(""))
+      end
+
+      it "works with no match" do
+        expect(parse("\\case{123 1 foo 2 bar 3 baz}"))
+          .to eq(para(""))
+      end
+
+      it "works with a match in the beginning" do
+        expect(parse("\\case{123 123 foo 4 bar 5 baz}"))
+          .to eq(para("foo"))
+      end
+
+      it "works with a match in the middle" do
+        expect(parse("\\case{123 1 foo 123 bar 4 baz}"))
+          .to eq(para("bar"))
+      end
+
+      it "works with a match in the end" do
+        expect(parse("\\case{123 1 foo 2 bar 123 baz}"))
+          .to eq(para("baz"))
+      end
+
+      it "works for non-numerics" do
+        expect(parse("\\case{something one foo something bar three baz}"))
+          .to eq(para("bar"))
+      end
+    end
   end
 end

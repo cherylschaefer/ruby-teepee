@@ -402,6 +402,8 @@ module Teepee
         @@commander.progn_operator expressions
       when "cond"
         @@commander.cond_operator expressions
+      when "case"
+        @@commander.case_operator expressions
       else
         command_error "unknown command #{command.to_html}"
       end
