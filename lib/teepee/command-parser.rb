@@ -451,9 +451,7 @@ module Teepee
           return [CommandParser.new(command, []), rest]
         end
         while rest.length > 0
-          if rest.first.is_a? WordToken
-            expressions << rest.shift
-          elsif rest.first.is_a? WhitespaceToken
+          if rest.first.is_a? WordToken or rest.first.is_a? WhitespaceToken or rest.first.is_a? PipeToken
             expressions << rest.shift
           elsif rest.first.is_a? BackslashToken
             result, rest = CommandParser.parse(rest)

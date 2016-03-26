@@ -144,6 +144,10 @@ module Teepee
       expression.to_s == "false"
     end
 
+    def pipe? expression
+      expression.is_a? PipeToken
+    end
+
     #----------------------------------------------------------------------------
 
     def + *numbers
