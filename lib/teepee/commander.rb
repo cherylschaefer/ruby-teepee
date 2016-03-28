@@ -357,10 +357,6 @@ module Teepee
       html_tag :del, expressions
     end
 
-    def do_operator expressions
-      html_tag :span, expressions
-    end
-
     def dollar
       "$"
     end
@@ -693,6 +689,10 @@ module Teepee
       " "
     end
 
+    def span_operator expressions
+      html_tag :span, expressions
+    end
+
     def sub expressions
       html_tag :sub, expressions
     end
@@ -749,7 +749,7 @@ module Teepee
         if expressions.length <= 1
           expressions.first
         else
-          do_operator expressions
+          span_operator expressions
         end
       end
     end
@@ -770,7 +770,7 @@ module Teepee
         if expressions.length <= 1
           expressions.first
         else
-          do_operator expressions
+          span_operator expressions
         end
       end
     end

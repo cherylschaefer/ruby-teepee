@@ -394,8 +394,8 @@ module Teepee
         @@commander.when_operator expressions
       when "unless"
         @@commander.unless_operator expressions
-      when "do"
-        @@commander.do_operator expressions
+      when "span"
+        @@commander.span_operator expressions
       when "prog1"
         @@commander.prog1_operator expressions
       when "progn"
