@@ -332,6 +332,10 @@ module Teepee
       end
     end
 
+    def comment expressions
+      nil
+    end
+
     def cond_operator expressions
       conditional, _, form, *rest = strip expressions
       if true_constant? conditional

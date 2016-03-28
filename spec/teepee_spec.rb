@@ -684,6 +684,17 @@ end
       end
     end
 
+    describe :comment_operator do
+      it "comments out it's expressions" do
+        expect(parse("1\\comment{I'm a comment}3"))
+          .to eq(para("13"))
+        expect(parse("1\\!--{I'm a comment}3"))
+          .to eq(para("13"))
+        expect(parse("1\\\#{I'm a comment}3"))
+          .to eq(para("13"))
+      end
+    end
+
     describe :prog1_operator do
       it "pulls out the first expression" do
         expect(parse("\\prog1{foo bar baz}"))

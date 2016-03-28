@@ -394,6 +394,10 @@ module Teepee
         @@commander.when_operator expressions
       when "unless"
         @@commander.unless_operator expressions
+      when "comment",
+           "!--",
+           "#"
+        @@commander.comment expressions
       when "span"
         @@commander.span_operator expressions
       when "prog1"
