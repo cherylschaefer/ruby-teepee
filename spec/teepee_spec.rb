@@ -289,6 +289,28 @@ end
     end
   end
 
+  describe :round do
+    it 'works with 1 argument' do
+      expect(parse("\\round{12.34}"))
+        .to eq(para("12"))
+      expect(parse("\\round{12.74}"))
+        .to eq(para("13"))
+      expect(parse("\\round{-12.34}"))
+        .to eq(para("-12"))
+      expect(parse("\\round{-12.74}"))
+        .to eq(para("-13"))
+    end
+
+    it 'works with 2 arguments' do
+      expect(parse("\\round{12.34567 2}"))
+        .to eq(para("12.35"))
+      expect(parse("\\round{-12.77777 3}"))
+        .to eq(para("-12.778"))
+      expect(parse("\\round{1234.567 -2}"))
+        .to eq(para("1200"))
+    end
+  end
+
   describe :percentages do
     describe :% do
       it "calculates percentages" do

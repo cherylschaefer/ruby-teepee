@@ -677,6 +677,14 @@ module Teepee
       "]"
     end
 
+    def round number, precision = nil, *_
+      if precision.nil?
+        ensure_numeric number.round
+      else
+        ensure_numeric number.round precision
+      end
+    end
+
     def sin angle
       ensure_numeric Math.sin angle
     end

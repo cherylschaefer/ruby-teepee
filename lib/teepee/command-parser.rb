@@ -325,6 +325,8 @@ module Teepee
            "ciel",
            "ceiling"
         @@commander.ceiling number_from_expression
+      when "round"
+        @@commander.round *numbers_from_expressions
       when "mod",
            "modulus",
            "modulo"
