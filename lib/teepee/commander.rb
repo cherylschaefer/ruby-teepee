@@ -332,6 +332,10 @@ module Teepee
       end
     end
 
+    def ceiling number
+      ensure_numeric number.ceil
+    end
+
     def comment expressions
       nil
     end
@@ -413,6 +417,10 @@ module Teepee
 
     def false_constant
       "false"
+    end
+
+    def floor number
+      ensure_numeric number.floor
     end
 
     def folder_id id

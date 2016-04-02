@@ -275,6 +275,20 @@ end
     end
   end
 
+  describe :floor do
+    it "works for floats" do
+      expect(parse("\\floor{12.34}"))
+        .to eq(para("12"))
+    end
+  end
+
+  describe :ceiling do
+    it "works for floats" do
+      expect(parse("\\ceiling{12.34}"))
+        .to eq(para("13"))
+    end
+  end
+
   describe :percentages do
     describe :% do
       it "calculates percentages" do

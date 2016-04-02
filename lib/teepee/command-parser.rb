@@ -319,6 +319,12 @@ module Teepee
       when "%t",
            "%total"
         @@commander.percent_total *numbers_from_expressions
+      when "floor"
+        @@commander.floor number_from_expression
+      when "ceil",
+           "ciel",
+           "ceiling"
+        @@commander.ceiling number_from_expression
       when "mod",
            "modulus",
            "modulo"
